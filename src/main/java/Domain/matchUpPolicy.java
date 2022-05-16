@@ -8,9 +8,9 @@ public class matchUpPolicy extends Policy {
     public matchUpPolicy() {
     }
 
-    public boolean cantPlayAgainstItself(Game game) throws Exception {
+    public boolean cantPlayAgainstItself(Game game){
         if (game == null){
-            throw new Exception("Game is null");
+            return false;
         }
 
         if (game.getAwayTeam() == game.getHomeTeam()){
@@ -20,9 +20,9 @@ public class matchUpPolicy extends Policy {
         return true;
     }
 
-    public boolean sameSeasonSameLeague(Game game) throws Exception {
+    public boolean sameSeasonSameLeague(Game game){
         if (game == null){
-            throw new Exception("Game is null");
+            return false;
         }
 
         Team away = game.getAwayTeam();

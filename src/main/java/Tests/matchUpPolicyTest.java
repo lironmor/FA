@@ -20,7 +20,7 @@ public class matchUpPolicyTest {
     }
 
     @Test
-    public void cantPlayAgainstItself_diffTeam() throws Exception {
+    public void cantPlayAgainstItself_diffTeam() {
         Team team1 = new Team("1", "Macabi TLV", "2021-2022", "Israeli Premier League");
         Team team2 = new Team("2", "Macabi Haifa", "2021-2022", "Israeli Premier League");
         Stadium stadium = new Stadium("TLV");
@@ -30,13 +30,23 @@ public class matchUpPolicyTest {
     }
 
     @Test
+    public void cantPlayAgainstItself_GameNull() {
+        Team team1 = new Team("1", "Macabi TLV", "2021-2022", "Israeli Premier League");
+        Team team2 = new Team("2", "Macabi Haifa", "2021-2022", "Israeli Premier League");
+        Stadium stadium = new Stadium("TLV");
+        Game game = null;
+        matchUpPolicy matchUp = new matchUpPolicy();
+        Assertions.assertEquals(false, matchUp.cantPlayAgainstItself(game));
+    }
+
+    @Test
     public void sameSeasonSameLeague_same(){
         Team team1 = new Team("1", "Macabi TLV", "2021-2022", "Israeli Premier League");
         Team team2 = new Team("2", "Macabi Haifa", "2021-2022", "Israeli Premier League");
         Stadium stadium = new Stadium("TLV");
         Game game = new Game("1", new Date(), team1, team2, stadium);
         matchUpPolicy matchUp = new matchUpPolicy();
-        Assertions.assertEquals(true, game);
+        Assertions.assertEquals(true, matchUp.sameSeasonSameLeague(game));
     }
 
     @Test
@@ -46,8 +56,19 @@ public class matchUpPolicyTest {
         Stadium stadium = new Stadium("TLV");
         Game game = new Game("1", new Date(), team1, team2, stadium);
         matchUpPolicy matchUp = new matchUpPolicy();
-        Assertions.assertEquals(false, game);
+        Assertions.assertEquals(false, matchUp.sameSeasonSameLeague(game));
     }
+    @Test
+    public void sameSeasonSameLeague_GameNull() {
+        Team team1 = new Team("1", "Macabi TLV", "2020-2021", "Israeli Premier League");
+        Team team2 = new Team("2", "Macabi Haifa", "2021-2022", "Israeli Premier League");
+        Stadium stadium = new Stadium("TLV");
+        Game game = null;
+        matchUpPolicy matchUp = new matchUpPolicy();
+        Assertions.assertEquals(false, matchUp.sameSeasonSameLeague(game));
+    }
+
+
 
     @Test
     public void sameSeasonSameLeague_diffSeasonDiffLeague(){
@@ -56,16 +77,18 @@ public class matchUpPolicyTest {
         Stadium stadium = new Stadium("TLV");
         Game game = new Game("1", new Date(), team1, team2, stadium);
         matchUpPolicy matchUp = new matchUpPolicy();
-        Assertions.assertEquals(false, game);
+        Assertions.assertEquals(false, matchUp.sameSeasonSameLeague(game));
     }
 
     @Test
-    public void sameSeasonSameLeague_sameSeasonDiffLeague(){
+    public void sameSeasonSameLeague_sameSeasonDiffLeague() {
         Team team1 = new Team("1", "Macabi TLV", "2021-2022", "Liga Leumit");
         Team team2 = new Team("2", "Macabi Haifa", "2021-2022", "Israeli Premier League");
         Stadium stadium = new Stadium("TLV");
         Game game = new Game("1", new Date(), team1, team2, stadium);
         matchUpPolicy matchUp = new matchUpPolicy();
-        Assertions.assertEquals(false, game);
+        Assertions.assertEquals(false, matchUp.sameSeasonSameLeague(game));
     }
+
+
 }

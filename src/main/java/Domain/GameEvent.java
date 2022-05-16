@@ -4,10 +4,10 @@ import java.util.Date;
 
 enum EventType{goal, offside, foul, redCard, yellowCard, injury, substitution}
 public class GameEvent {
-    Date date;
-    int minuteInGame;
-    String description;
-    EventType type;
+    private Date date;
+    private int minuteInGame;
+    private String description;
+    private EventType type;
 
     public GameEvent(Date dat , int min, String descript, String type) throws Exception {
         date = dat;
@@ -60,6 +60,9 @@ public class GameEvent {
     }
 
     public EventType getType() {
-        return type;
+        if (type != null)
+            return type;
+        else
+            return null;
     }
 }

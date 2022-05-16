@@ -20,12 +20,30 @@ public class RefereeTest {
         Assertions.assertEquals("novice", referee.getDegree());
         Assertions.assertEquals(new ArrayList<>(), referee.getComingUp());
     }
+    @Test
+    public void refereeConstructor_ErrorDegree()  {
+        try {
+            Referee referee = new Referee("Roey Bokobza", "roey@gmail.com", "roeyboko", "1234", "main", "Not a Degree", new ArrayList<>());
+        }
+        catch(Exception e){
+            Assertions.assertEquals("Referee degree must be expert/veteran/novice !",e.getMessage());
+        }
+    }
+    @Test
+    public void refereeConstructor_ErrorRole()  {
+        try {
+            Referee referee = new Referee("Roey Bokobza", "roey@gmail.com", "roeyboko", "1234", "Not a role", "novice", new ArrayList<>());
+        }
+        catch(Exception e){
+            Assertions.assertEquals("Referee roll must be main/sideline/forth !",e.getMessage());
+        }
+    }
 
     @Test
     public void refereeConstructor_setRoleToSideLine() throws Exception {
         Referee referee = new Referee("Roey Bokobza", "roey@gmail.com", "roeyboko", "1234", "main", "expert", new ArrayList<>());
         referee.roleChoose("side line");
-        Assertions.assertEquals("side line", referee.getRefereeRole());
+        Assertions.assertEquals("sideline", referee.getRefereeRole());
     }
 
     @Test
@@ -54,7 +72,7 @@ public class RefereeTest {
     public void refereeConstructor_setDegreeToMaxim() throws Exception {
         Referee referee = new Referee("Roey Bokobza", "roey@gmail.com", "roeyboko", "1234", "main", "expert", new ArrayList<Game>());
         referee.degreeChoose("maxim the maxim");
-        Assertions.assertEquals(null, referee.getDegree());
+        Assertions.assertNull(referee.getDegree());
     }
 
     @Test
@@ -81,6 +99,7 @@ public class RefereeTest {
         Team t2 = new Team("3", "Hapoel Tel-Aviv", "2021/2022", "Israeli");
         Stadium std = new Stadium("Haifa");
         Game g = new Game("1", new Date(), t1, t2, std);
+        g.addReport(gr);
         referee.addEventToReport(g, date, 31, "yellow card to xavi", "yellow card");
 
         Assertions.assertEquals(date, g.getGameReport().getReport().get(0).getDate());
@@ -88,6 +107,7 @@ public class RefereeTest {
         Assertions.assertEquals(31, g.getGameReport().getReport().get(0).getMinuteInGame());
     }
 
+    @Test
     public void addEventToReport_ErrorType() throws Exception {
         Referee referee = new Referee("Roey Bokobza", "roey@gmail.com", "roeyboko", "1234", "main", "expert", new ArrayList<Game>());
         GameReport gr = new GameReport();

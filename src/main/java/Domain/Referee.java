@@ -71,7 +71,10 @@ public class Referee extends User{
     }
 
     public String getRefereeRole() {
-        return refereeRole.toString();
+        if (refereeRole != null)
+            return refereeRole.toString();
+        else
+            return null;
     }
 
     public String getDegree() {

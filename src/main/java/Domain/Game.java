@@ -21,7 +21,12 @@ public class Game {
     }
 
     public void addReport(GameReport rep) {
-        gameReport = rep;
+//        if(UserController.getInstance().getLoggedInUser() instanceof Referee){
+            gameReport = rep;
+//        }
+//        else{
+//            System.out.println("Only a referee can add the game report.");
+//        }
     }
 
     public String getGameID() {

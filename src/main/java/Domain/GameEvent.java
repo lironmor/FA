@@ -46,4 +46,20 @@ public class GameEvent {
         }
 
     }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public int getMinuteInGame() {
+        return minuteInGame;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public EventType getType() {
+        return type;
+    }
 }

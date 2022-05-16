@@ -42,11 +42,11 @@ public class UserController{
     }
 
     public int logIn(String userName , String password){
-        boolean success = false;
+        int result = 0;
         // SHTUYOT SHEL LIRON... if()...== ()
         //if(setLoggedIn(User u) == true --> HACOL TOV , Else --> "You are alredy logged in as" + loggedInUser.getUserName();
-        success =  true;
-        return success;
+        result =  0;
+        return result;
 
     }
     private boolean setLoggedIn(User u){

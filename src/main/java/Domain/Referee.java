@@ -19,7 +19,7 @@ public class Referee extends User{
             throw new Exception("Referee degree must be expert/veteran/novice !");
         }
         if(refereeRole == null) {
-            throw new Exception("Referee roll must be main/sideline/forth");
+            throw new Exception("Referee roll must be main/sideline/forth !");
         }
         this.comingUp = comingUp;
     }

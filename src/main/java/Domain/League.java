@@ -19,7 +19,4 @@ public class League {
         return seasons;
     }
 
-    public void addSeason(Season season) {
-        this.seasons.add(season);
-    }
 }

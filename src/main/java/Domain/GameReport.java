@@ -13,4 +13,7 @@ public class GameReport {
         report.add(event);
     }
 
+    public ArrayList<GameEvent> getReport() {
+        return report;
+    }
 }

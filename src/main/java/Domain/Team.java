@@ -49,10 +49,6 @@ public class Team {
         return assets;
     }
 
-    public void setAssets(ArrayList<IAssets> assets) {
-        this.assets = assets;
-    }
-
     public String getSeason() {
         return season;
     }

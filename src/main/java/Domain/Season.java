@@ -33,8 +33,4 @@ public class Season {
     public ArrayList<League> getLeagues() {
         return leagues;
     }
-
-    public void addLeague(League league) {
-        this.leagues.add(league);
-    }
 }

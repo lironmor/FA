@@ -11,7 +11,7 @@ import java.util.Date;
 public class matchUpPolicyTest {
 
     @Test
-    public void cantPlayAgainstItself_sameTeam(){
+    public void cantPlayAgainstItself_sameTeam() throws Exception {
         Team team = new Team("1", "Macabi TLV", "2021-2022", "Israeli Premier League");
         Stadium stadium = new Stadium("TLV");
         Game game = new Game("1", new Date(), team, team, stadium);
@@ -20,7 +20,7 @@ public class matchUpPolicyTest {
     }
 
     @Test
-    public void cantPlayAgainstItself_diffTeam(){
+    public void cantPlayAgainstItself_diffTeam() throws Exception {
         Team team1 = new Team("1", "Macabi TLV", "2021-2022", "Israeli Premier League");
         Team team2 = new Team("2", "Macabi Haifa", "2021-2022", "Israeli Premier League");
         Stadium stadium = new Stadium("TLV");

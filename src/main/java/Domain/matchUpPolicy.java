@@ -5,6 +5,9 @@ import java.util.ArrayList;
 public class matchUpPolicy extends Policy {
     String[] matchUps = {"Team can't play against itself", "The teams belongs the same season and same league"};
 
+    public matchUpPolicy() {
+    }
+
     public boolean cantPlayAgainstItself(Game game){
         if (game == null){
             return false;

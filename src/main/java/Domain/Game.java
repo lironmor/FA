@@ -63,4 +63,12 @@ public class Game {
     public void setGameReport(GameReport gameReport) {
         this.gameReport = gameReport;
     }
+
+    public Team getAwayTeam() {
+        return awayTeam;
+    }
+
+    public Team getHomeTeam() {
+        return homeTeam;
+    }
 }

@@ -10,14 +10,15 @@ public class ServiceController {
     }
 
     //Login to the system.
-    public void logIn(String userName , String password) {
-        int result = uc.logIn(userName, password);
-        if (result == 0) {
+    public void logIn(String userName , String password) throws Exception {
+        boolean result = false;
+        try {
+            result = uc.logIn(userName, password);
+        } catch (Exception e) {
+            throw e;
+        }
+        if (result) {
             System.out.println("Succsessful login");
-        } else if (result == 1) {
-            System.out.println("User name or password are incorrect");
-        } else {
-            System.out.println("You are alredy logged in to the system as "+ uc.getLoggedInUser().getUserName());
         }
     }
 
@@ -31,9 +32,16 @@ public class ServiceController {
         }
     }
 
-    public void registerReferee(String fullName, String email, String userName, String password, String refereeRole, String degree){
-        boolean result = uc.registerReferee(fullName,email,userName,password,refereeRole,degree);
-
+    public void registerReferee(String fullName, String email, String userName, String password, String refereeRole, String degree) throws Exception {
+        boolean result = false;
+        try {
+            result = uc.registerReferee(fullName, email, userName, password, refereeRole, degree);
+        } catch (Exception e) {
+            throw e;
+        }
+        if(result) {
+            System.out.println("successful register");
+        }
     }
 
 

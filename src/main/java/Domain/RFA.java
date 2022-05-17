@@ -1,12 +1,8 @@
 package Domain;
 
-public class RFA {
-    private String id;
-    private String name;
+public class RFA extends User{
 
-    public RFA(String id , String name){
-        this.id = id;
-        this.name = name;
+    public RFA(String fullName, String email, String userName, String password) {
+        super(fullName, email, userName, password);
     }
-
 }

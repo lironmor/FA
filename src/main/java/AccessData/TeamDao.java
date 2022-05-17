@@ -1,18 +1,18 @@
 package AccessData;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-import Domain.Team;
+import org.bson.Document;
+
 
 import java.util.ArrayList;
 
 
-public class TeamDao implements Dao<Team>{
+public class TeamDao implements Dao {
 
     private static TeamDao instance = new TeamDao();
     private MongoDB db = MongoDB.getInstance();
-    private MongoCollection collection = db.getCollection("Teams");
+    private MongoCollection teamCollection = db.getCollection("teams");
     private TeamDao(){ }
 
     public static TeamDao getInstance(){
@@ -20,32 +20,27 @@ public class TeamDao implements Dao<Team>{
     }
 
     @Override
-    public Team get(String id) {
-        BasicDBObject teamObj = new BasicDBObject("id", id);
-        MongoCursor<BasicDBObject> cursor = collection.find(teamObj).iterator();
+    public Document get(String id) {
+        Document teamObj = new Document("teamId", id);
+        MongoCursor<Document> cursor = teamCollection.find(teamObj).iterator();
         while (cursor.hasNext()) {
-            BasicDBObject next = cursor.next();
-//            Team team = new Team(next.get("id"),...)
-//            return team;
+            return cursor.next();
         }
         return null;
     }
 
     @Override
-    public ArrayList<Team> getAll() {
-        ArrayList<Team> teams = new ArrayList<Team>();
-        MongoCursor<BasicDBObject> cursor = collection.find(new BasicDBObject()).iterator();
+    public ArrayList<Document> getAll() {
+        ArrayList<Document> teams = new ArrayList<Document>();
+        MongoCursor<Document> cursor = teamCollection.find(new Document()).iterator();
         while (cursor.hasNext()) {
-            BasicDBObject next = cursor.next();
-            //            Team team = new Team(...)
-            //            teams.add(team)
+            teams.add(cursor.next());
         }
         return teams;
     }
 
-    @Override
-    public void save(Team team) {
-//        BasicDBObject teamObj = new BasicDBObject("id", team.getId()).append("name", team.getName());
-//        collection.insertOne(teamObj);
+    public void save(String teamID, String teamName, int expense, ArrayList<String> assets, String league, String season) {
+        Document teamObj = new Document("teamId", teamID).append("teamName", teamName).append("expense", expense).append("assets", assets).append("league", league).append("season", season);
+        teamCollection.insertOne(teamObj);
     }
 }

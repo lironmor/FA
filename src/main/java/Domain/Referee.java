@@ -15,10 +15,10 @@ public class Referee extends User{
         super(fullName, email, userName, password);
         roleChoose(refereeRole);
         degreeChoose(degree);
-        if(degree == null){
+        if(this.degree == null){
             throw new Exception("Referee degree must be expert/veteran/novice !");
         }
-        if(refereeRole == null) {
+        if(this.refereeRole == null) {
             throw new Exception("Referee roll must be main/sideline/forth !");
         }
         this.comingUpGameIds = comingUpGameIds;

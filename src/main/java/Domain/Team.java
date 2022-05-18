@@ -8,7 +8,10 @@ public class Team {
     private Stadium stadium;
     private ArrayList<String> seasonIds;
 
-    public Team(String teamName, Stadium stadium) {
+    public Team(String teamName, Stadium stadium) throws Exception {
+        if(teamName == null || stadium == null) {
+            throw new Exception("parameters are null");
+        }
         this.teamName = teamName;
         this.expense = 0;
         this.stadium = stadium;

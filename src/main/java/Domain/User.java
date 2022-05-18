@@ -9,7 +9,13 @@ public abstract class  User {
 
 
     // constructors / standard setters / getters
-    public User (String fullName, String email,String userName , String password) {
+    public User (String fullName, String email, String userName , String password) throws Exception {
+        if(fullName == null || email == null || userName == null || password == null){
+            throw new Exception("parameters are null");
+        }
+        if(!email.contains("@")) {
+            throw new Exception("not a valid email");
+        }
         this.fullName = fullName;
         this.email = email;
         this.userName = userName;

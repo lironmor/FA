@@ -16,6 +16,9 @@ public class Season {
         if(endYear - startYear != 1 || startYear < new Date().getYear()){
             throw new Exception("not a valid season");
         }
+        if(leagueName == null) {
+            throw new Exception("parameters are null");
+        }
         this.id = leagueName + " " + startYear + "/"+ endYear;
         this.teamNames = new ArrayList<>();
     }

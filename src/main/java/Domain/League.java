@@ -7,7 +7,10 @@ public class League {
     private ArrayList<String> seasonIds;
 
 
-    public League(String name) {
+    public League(String name) throws Exception {
+        if(name == null){
+            throw new Exception("parameters are null");
+        }
         this.name = name;
         this.seasonIds = new ArrayList<>();
     }

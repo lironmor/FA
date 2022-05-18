@@ -12,7 +12,10 @@ public class Game {
 
 
     //    Team home , Team away
-    public Game(String gameId, String homeTeamName, String awayTeamName, Stadium stadium){
+    public Game(String gameId, String homeTeamName, String awayTeamName, Stadium stadium) throws Exception {
+        if(gameId == null || homeTeamName == null || awayTeamName == null || stadium == null) {
+            throw new Exception("parameters are null");
+        }
         this.gameID= gameId;
         this.awayTeamName = awayTeamName;
         this.homeTeamName = homeTeamName;

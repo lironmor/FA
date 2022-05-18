@@ -5,20 +5,20 @@ import java.util.Date;
 public class Game {
     private String gameID;
     private Date timeAndDate;
-    private String awayTeamName;
-    private String homeTeamName;
+    private Team awayTeam;
+    private Team homeTeam;
 //    private GameReport gameReport;
     private Stadium stadium;
 
 
     //    Team home , Team away
-    public Game(String gameId, String homeTeamName, String awayTeamName, Stadium stadium) throws Exception {
-        if(gameId == null || homeTeamName == null || awayTeamName == null || stadium == null) {
+    public Game(String gameId, Team homeTeam, Team awayTeam, Stadium stadium) throws Exception {
+        if(gameId == null || homeTeam == null || awayTeam == null || stadium == null) {
             throw new Exception("parameters are null");
         }
-        this.gameID= gameId;
-        this.awayTeamName = awayTeamName;
-        this.homeTeamName = homeTeamName;
+        this.gameID = gameId;
+        this.awayTeam = awayTeam;
+        this.homeTeam = homeTeam;
         this.stadium = stadium;
     }
 
@@ -43,8 +43,8 @@ public class Game {
         this.timeAndDate = timeAndDate;
     }
 //
-    public String getAwayTeamName() {
-        return awayTeamName;
+    public Team getAwayTeam() {
+        return awayTeam;
     }
 
 //    public void setAwayTeamName(Team awayTeam) {
@@ -67,8 +67,8 @@ public class Game {
 //        this.gameReport = gameReport;
 //    }
 
-    public String getHomeTeamName() {
-        return homeTeamName;
+    public Team getHomeTeam() {
+        return homeTeam;
     }
 
 //    public Team getHomeTeam() {

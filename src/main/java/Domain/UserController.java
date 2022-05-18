@@ -193,19 +193,29 @@ public class UserController {
         uc.stadiumDa.save(blumfield.getName(), blumfield);
         Team team = new Team("maccabi haifa" , samiOffer);
         Team team1 = new Team("Hapoel Tel Aviv", blumfield);
+        team.setExpense(1000);
+        team1.setExpense(100);
         uc.teamDa.save(team.getTeamName(), team);
         uc.teamDa.save(team1.getTeamName(), team1);
-        Game game = new Game("2", team.getTeamName(), team1.getTeamName(), team.getStadium());
+        Game game = new Game("2", team, team1, team.getStadium());
         uc.gameDa.save(game.getGameID(), game);
 //        referee = new Referee("Liron", "Liron@gmail.com", "Liron", "1234", "main", "expert", new ArrayList<>());
 //        uc.refereeDa.save("1", referee);
         Document document = (Document) uc.gameDa.get(game.getGameID()).get("game");
-        String away = (String) document.get("awayTeamName");
-        String home = (String) document.get("homeTeamName");
+        Document away = (Document) document.get("awayTeam");
+        Document awayTS = (Document) away.get("stadium");
+        Document home = (Document) document.get("homeTeam");
+        Document homeTS = (Document) home.get("stadium");
+        Team homeT = new Team((String) home.get("teamName"), new Stadium((String) homeTS.get("name"), (String) homeTS.get("location")));
+        Team awayT = new Team((String) away.get("teamName"), new Stadium((String) awayTS.get("name"), (String) awayTS.get("location")));
+        int homeEx = (int) home.get("expense");
+        int awayEx = (int) away.get("expense");
+        homeT.setExpense(homeEx);
+        awayT.setExpense(awayEx);
         String id = (String) document.get("gameID");
         String stadiumName = (String) ((Document)document.get("stadium")).get("name");
         String stadiumLoc = (String) ((Document)document.get("stadium")).get("location");
-        Game g = new Game(id, home ,away, new Stadium(stadiumLoc, stadiumName));
-        System.out.println(g.getHomeTeamName());
+        Game g = new Game(id, homeT ,awayT, new Stadium(stadiumLoc, stadiumName));
+        System.out.println(g.getHomeTeam().getExpense());
     }
 }

@@ -13,15 +13,17 @@ public class TeamDao implements Dao {
     private static TeamDao instance = new TeamDao();
     private MongoDB db = MongoDB.getInstance();
     private MongoCollection teamCollection = db.getCollection("teams");
-    private TeamDao(){ }
 
-    public static TeamDao getInstance(){
+    private TeamDao() {
+    }
+
+    public static TeamDao getInstance() {
         return instance;
     }
 
     @Override
-    public Document get(String id) {
-        Document teamObj = new Document("teamId", id);
+    public Document get(String teamName) {
+        Document teamObj = new Document("_id", teamName);
         MongoCursor<Document> cursor = teamCollection.find(teamObj).iterator();
         while (cursor.hasNext()) {
             return cursor.next();
@@ -43,4 +45,10 @@ public class TeamDao implements Dao {
         Document teamObj = new Document("teamId", teamID).append("teamName", teamName).append("expense", expense).append("assets", assets).append("league", league).append("season", season);
         teamCollection.insertOne(teamObj);
     }
+
+    public void save(String teamName, Object team) {
+        Document teamDoc = new Document("_id", teamName).append("team", team);
+        teamCollection.insertOne(teamDoc);
+    }
 }
+

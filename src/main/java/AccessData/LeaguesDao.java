@@ -16,8 +16,8 @@ public class LeaguesDao implements Dao{
     }
 
     @Override
-    public Document get(String id) {
-        Document leagueObj = new Document("leagueId", id);
+    public Document get(String leagueName) {
+        Document leagueObj = new Document("_id", leagueName);
         MongoCursor<Document> cursor = teamCollection.find(leagueObj).iterator();
         while (cursor.hasNext()) {
             return cursor.next();
@@ -39,4 +39,9 @@ public class LeaguesDao implements Dao{
         Document leagueObj = new Document("leagueId", leagueID).append("seasons", seasons);
         teamCollection.insertOne(leagueObj);
     }
+
+    public void save(String leagueName, Object league) {
+        Document leagueDoc = new Document("_id", leagueName).append("league", league);
+    }
 }
+

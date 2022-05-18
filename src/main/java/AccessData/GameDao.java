@@ -18,8 +18,8 @@ public class GameDao implements Dao {
     }
 
     @Override
-    public Document get(String id) {
-        Document teamObj = new Document("gameId", id);
+    public Document get(String gameId) {
+        Document teamObj = new Document("_id", gameId);
         MongoCursor<Document> cursor = gameCollection.find(teamObj).iterator();
         while (cursor.hasNext()) {
             return cursor.next();
@@ -41,5 +41,10 @@ public class GameDao implements Dao {
     public void save(String gameID, Date time, int expense, String homeTeamID, String awayTeamID, String stadiumName, String reportId) {
         Document gameObj = new Document("gameId", gameID).append("time", time).append("homeTeam", homeTeamID).append("awayTeam", awayTeamID).append("stadium", stadiumName).append("gameReport", reportId);
         gameCollection.insertOne(gameObj);
+    }
+
+    public void save(String gameId, Object game) {
+        Document gameDoc = new Document("_id", gameId).append("game", game);
+        gameCollection.insertOne(gameDoc);
     }
 }

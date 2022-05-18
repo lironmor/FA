@@ -3,38 +3,28 @@ package Domain;
 import java.util.ArrayList;
 
 public class Team {
-    private String teamID;
     private String teamName;
     private int expense;
-    private ArrayList<IAssets> assets;
+    private Stadium stadium;
+    private ArrayList<String> seasonIds;
 
-    private String season;
-
-    private String league;
-
-    public Team(String teamID, String teamName, String season, String league) {
-        this.teamID = teamID;
+    public Team(String teamName, Stadium stadium) {
         this.teamName = teamName;
         this.expense = 0;
-        this.assets = new ArrayList<IAssets>();
-        this.season = season;
-        this.league = league;
-    }
-
-    public String getTeamID() {
-        return teamID;
-    }
-
-    public void setTeamID(String teamID) {
-        this.teamID = teamID;
+        this.stadium = stadium;
+        this.seasonIds = new ArrayList<>();
     }
 
     public String getTeamName() {
         return teamName;
     }
 
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
+    public void setTeamName(String teamName) throws Exception {
+        if(teamName != null) {
+            this.teamName = teamName;
+        } else {
+            throw new Exception("teamName is null");
+        }
     }
 
     public int getExpense() {
@@ -45,29 +35,20 @@ public class Team {
         this.expense = expense;
     }
 
-    public ArrayList<IAssets> getAssets() {
-        return assets;
+    public void addSeasonId(String seasonId) throws Exception {
+        if(seasonId == null) {
+            throw new Exception("season is null");
+        } else {
+            for (String sId : seasonIds) {
+                if(sId.equals(seasonId)){
+                    throw new Exception("team already belong to this season");
+                }
+            }
+        }
+        seasonIds.add(seasonId);
     }
 
-    public String getSeason() {
-        return season;
+    public Stadium getStadium() {
+        return stadium;
     }
-
-    public void setSeason(String season) {
-        this.season = season;
-    }
-
-    public String getLeague() {
-        return league;
-    }
-
-    public void setLeague(String league) {
-        this.league = league;
-    }
-
-    public void addAssets(IAssets asset) {
-        this.assets.add(asset);
-    }
-
-
 }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class UserDao implements Dao {
     private static UserDao instance = new UserDao();
     private MongoDB db = MongoDB.getInstance();
-    private MongoCollection userCollection = db.getCollection("user");
+    private MongoCollection userCollection = db.getCollection("users");
     private UserDao(){ }
 
     public static UserDao getInstance(){

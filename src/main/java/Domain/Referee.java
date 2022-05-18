@@ -9,9 +9,9 @@ enum Degree {expert, veteran,novice}
 public class Referee extends User{
     private Role refereeRole;
     private Degree degree;
-    private ArrayList<Game> comingUp;
+    private ArrayList<String> comingUpGameIds;
 
-    public Referee(String fullName, String email, String userName, String password, String refereeRole, String degree, ArrayList<Game> comingUp) throws Exception {
+    public Referee(String fullName, String email, String userName, String password, String refereeRole, String degree, ArrayList<String> comingUpGameIds) throws Exception {
         super(fullName, email, userName, password);
         roleChoose(refereeRole);
         degreeChoose(degree);
@@ -21,25 +21,21 @@ public class Referee extends User{
         if(refereeRole == null) {
             throw new Exception("Referee roll must be main/sideline/forth !");
         }
-        this.comingUp = comingUp;
+        this.comingUpGameIds = comingUpGameIds;
     }
 
-    public ArrayList<Game> getUpComingGames(){
-        return comingUp;
-    }
+//    public ArrayList<Game> getUpComingGames(){
+//        return comingUp;
+//    }
 
-    public void setComingUp(ArrayList<Game> comingUp) {
-        this.comingUp = comingUp;
-    }
-
-    public void makeGameReport(Game g){
-        GameReport rep = new GameReport();
-        g.addReport(rep);
-    }
-    public void addEventToReport(Game g, Date date, int min, String descript,String type ) throws Exception {
-        GameEvent event = new GameEvent(date,min,descript,type);
-        g.getGameReport().addEventToReport(event);
-    }
+//    public void makeGameReport(Game g){
+//        GameReport rep = new GameReport();
+//        g.addReport(rep);
+//    }
+//    public void addEventToReport(Game g, Date date, int min, String descript,String type ) throws Exception {
+//        GameEvent event = new GameEvent(date,min,descript,type);
+//        g.getGameReport().addEventToReport(event);
+//    }
 
     public void roleChoose(String refRole){
         if(refRole == "main"){
@@ -81,7 +77,8 @@ public class Referee extends User{
         return degree.toString();
     }
 
-    public ArrayList<Game> getComingUp() {
-        return comingUp;
+    public ArrayList<String> getComingUpGameIds() {
+        return comingUpGameIds;
     }
+
 }

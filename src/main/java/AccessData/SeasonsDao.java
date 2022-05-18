@@ -17,8 +17,8 @@ public class SeasonsDao implements Dao {
     }
 
     @Override
-    public Document get(String id) {
-        Document seasObj = new Document("seasonId", id);
+    public Document get(String seasonId) {
+        Document seasObj = new Document("_id", seasonId);
         MongoCursor<Document> cursor = teamCollection.find(seasObj).iterator();
         while (cursor.hasNext()) {
             return cursor.next();
@@ -39,5 +39,10 @@ public class SeasonsDao implements Dao {
     public void save(String seasonName, ArrayList<String> leagues) {
         Document seasObj = new Document("seasonName", seasonName).append("leagues", leagues);
         teamCollection.insertOne(seasObj);
+    }
+
+    public void save(String seasonId, Object season) {
+        Document seasonDoc = new Document("_id", seasonId).append("season", season);
+        teamCollection.insertOne(seasonDoc);
     }
 }

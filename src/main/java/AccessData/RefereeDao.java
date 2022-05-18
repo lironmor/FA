@@ -24,8 +24,8 @@ public class RefereeDao implements Dao {
     private static RefereeDao instance = new RefereeDao();
 
     @Override
-    public Document get(String userName) {
-        Document refObj = new Document("userName", userName);
+    public Document get(String refereeId) {
+        Document refObj = new Document("_id", refereeId);
         MongoCursor<Document> cursor = refereesCollection.find(refObj).iterator();
         while (cursor.hasNext()) {
             return cursor.next();
@@ -33,6 +33,15 @@ public class RefereeDao implements Dao {
         return null;
     }
 
+
+//    public Document gett(int id) {
+//        Document refObj = new Document("_id", id);
+//        MongoCursor<Document> cursor = refereesCollection.find(refObj).iterator();
+//        while (cursor.hasNext()) {
+//            return (Document) cursor.next().get("ref");
+//        }
+//        return null;
+//    }
 
     @Override
     public ArrayList<Document> getAll() {
@@ -46,6 +55,13 @@ public class RefereeDao implements Dao {
 
     public void save(String name, String email, String userName, String password, String degree, String role, ArrayList<String> comingUpIds) {
         Document refObj = new Document("name", name).append("email", email).append("userName", userName).append("password", password).append("role", role).append("degree", degree).append("comingUp", comingUpIds);
+        refereesCollection.insertOne(refObj);
+        Document userObj = new Document("userName", userName).append("password", password).append("type", "referee");
+        usersCollection.insertOne(userObj);
+    }
+
+    public void save(String refereeId, Object referee, String userName, String password) {
+        Document refObj = new Document("_id", refereeId).append("ref", referee);
         refereesCollection.insertOne(refObj);
         Document userObj = new Document("userName", userName).append("password", password).append("type", "referee");
         usersCollection.insertOne(userObj);

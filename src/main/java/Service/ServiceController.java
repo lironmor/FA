@@ -32,10 +32,10 @@ public class ServiceController {
         }
     }
 
-    public void registerReferee(String fullName, String email, String userName, String password, String refereeRole, String degree) throws Exception {
+    public void registerReferee(String fullName, String email, String userName, String password, String refereeRole, String degree, String id) throws Exception {
         boolean result = false;
         try {
-            result = uc.registerReferee(fullName, email, userName, password, refereeRole, degree);
+            result = uc.registerReferee(fullName, email, userName, password, refereeRole, degree, id);
         } catch (Exception e) {
             throw e;
         }

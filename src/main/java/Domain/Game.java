@@ -5,36 +5,31 @@ import java.util.Date;
 public class Game {
     private String gameID;
     private Date timeAndDate;
-    private Team awayTeam;
-    private Team homeTeam;
-    private GameReport gameReport;
+    private String awayTeamName;
+    private String homeTeamName;
+//    private GameReport gameReport;
     private Stadium stadium;
 
 
     //    Team home , Team away
-    public Game(String id, Date time, Team home, Team away, Stadium stadium){
-        gameID= id;
-        timeAndDate = time;
-        awayTeam = away;
-        homeTeam = home;
+    public Game(String gameId, String homeTeamName, String awayTeamName, Stadium stadium){
+        this.gameID= gameId;
+        this.awayTeamName = awayTeamName;
+        this.homeTeamName = homeTeamName;
         this.stadium = stadium;
     }
 
-    public void addReport(GameReport rep) {
-//        if(UserController.getInstance().getLoggedInUser() instanceof Referee){
-            gameReport = rep;
-//        }
-//        else{
-//            System.out.println("Only a referee can add the game report.");
-//        }
-    }
+//    public void addReport(GameReport rep) {
+////        if(UserController.getInstance().getLoggedInUser() instanceof Referee){
+//            gameReport = rep;
+////        }
+////        else{
+////            System.out.println("Only a referee can add the game report.");
+////        }
+//    }
 
     public String getGameID() {
         return gameID;
-    }
-
-    public void setGameID(String gameID) {
-        this.gameID = gameID;
     }
 
     public Date getTimeAndDate() {
@@ -45,11 +40,11 @@ public class Game {
         this.timeAndDate = timeAndDate;
     }
 //
-//    public Team getAwayTeam() {
-//        return awayTeam;
-//    }
-//
-//    public void setAwayTeam(Team awayTeam) {
+    public String getAwayTeamName() {
+        return awayTeamName;
+    }
+
+//    public void setAwayTeamName(Team awayTeam) {
 //        this.awayTeam = awayTeam;
 //    }
 //
@@ -61,19 +56,23 @@ public class Game {
 //        this.homeTeam = homeTeam;
 //    }
 
-    public GameReport getGameReport() {
-        return gameReport;
+//    public GameReport getGameReport() {
+//        return gameReport;
+//    }
+
+//    public void setGameReport(GameReport gameReport) {
+//        this.gameReport = gameReport;
+//    }
+
+    public String getHomeTeamName() {
+        return homeTeamName;
     }
 
-    public void setGameReport(GameReport gameReport) {
-        this.gameReport = gameReport;
-    }
+//    public Team getHomeTeam() {
+//        return homeTeam;
+//    }
 
-    public Team getAwayTeam() {
-        return awayTeam;
-    }
-
-    public Team getHomeTeam() {
-        return homeTeam;
+    public Stadium getStadium() {
+        return stadium;
     }
 }

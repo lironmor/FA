@@ -3,6 +3,7 @@ import AccessData.*;
 import org.bson.Document;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 //public class UserController {
 //    ///data members
@@ -29,7 +30,7 @@ public class UserController {
     public static UserController instance;
     // SHTUYOT SHEL LIRON
     private TeamDao teamDa;
-    private AssetsDao assetsDa;
+//    private AssetsDao assetsDa;
     private RFADao faDa;
     private GameDao gameDa;
     private LeaguesDao leaguesDa;
@@ -43,7 +44,7 @@ public class UserController {
     private UserController() {
         this.loggedInUser = null;
         this.teamDa = TeamDao.getInstance();
-        this.assetsDa = AssetsDao.getInstance();
+//        this.assetsDa = AssetsDao.getInstance();
         this.faDa = RFADao.getInstance();
         this.gameDa = GameDao.getInstance();
         this.leaguesDa = LeaguesDao.getInstance();
@@ -68,7 +69,6 @@ public class UserController {
     //2-already logged in
 
     public boolean logIn(String userName, String password) throws Exception {
-        int result = 0;
         // SHTUYOT SHEL LIRON... if()...== ()
         //if(setLoggedIn(User u) == true --> HACOL TOV , Else --> "You are alredy logged in as" + loggedInUser.getUserName();
         if (userName == null || password == null) {
@@ -93,7 +93,7 @@ public class UserController {
                     String email = (String) refDoc.get("email");
                     String role = (String) refDoc.get("role");
                     String degree = (String) refDoc.get("degree");
-                    loggedInUser = new Referee(name, email, uName, password, role, degree , new ArrayList<>());
+                    loggedInUser = new Referee(name, email, uName, password, role, degree, new ArrayList<>());
                     return true;
 
                 case "fa":
@@ -113,16 +113,16 @@ public class UserController {
         }
     }
 
-    private boolean setLoggedIn(User u){
-        if(loggedInUser != null){
+    private boolean setLoggedIn(User u) {
+        if (loggedInUser != null) {
             return false;
-        }
-        else{
+        } else {
             this.loggedInUser = u;
             return true;
         }
     }
-    public boolean embedGame(String gameID){
+
+    public boolean embedGame(String gameID) {
         //SHTUYOT SHEL LIRON --> if no such GAME - RETURN 1;
         //CREATE Team1
         //CREATE team2
@@ -136,36 +136,76 @@ public class UserController {
         return true;
     }
 
-    public boolean registerReferee(String fullName, String email, String userName, String password, String refereeRole, String degree) throws Exception {
-        if(loggedInUser == null) {
+    public boolean registerReferee(String fullName, String email, String userName, String password, String refereeRole, String degree, String id) throws Exception {
+        if (loggedInUser == null) {
             throw new Exception("No user are currently logged in");
         }
-        if(loggedInUser.getClass().getName().equals(RFA.class.getName())) {
+        if (loggedInUser.getClass().getName().equals(RFA.class.getName())) {
             if (fullName == null || email == null || userName == null || password == null || refereeRole == null || degree == null) {
                 throw new Exception("Referee parameters are missing");
             }
             if (userDa.get(userName) != null) {
                 throw new Exception("User name is already exist in system");
             }
-            refereeDa.save(fullName, email, userName, password, degree, refereeRole, new ArrayList<>());
+//            refereeDa.save(fullName, email, userName, password, degree, refereeRole, new ArrayList<>());
+            Referee referee = new Referee(fullName, email,userName,password,refereeRole,degree,new ArrayList<>());
+            refereeDa.save(id, referee, userName, password);
         } else {
             throw new Exception("User is not allowed to register referee");
         }
         return true;
     }
 
-    public void addTeam(String teamId, String teamName, String season, String league) throws Exception {
-        if(teamDa.get(teamId) != null) {
-            throw new Exception("team is already exist");
-        }
-        if(teamId == null || teamName == null || season == null || league == null){
-            throw new Exception("some parameters are null");
-        }
-        Team team = new Team(teamId, teamName, season, league);
-        teamDa.save(teamId, teamName, team.getExpense(), new ArrayList<>(), league, season);
-    }
+//    public void addTeam(String teamId, String teamName, String season, String league) throws Exception {
+//        if (teamId == null || teamName == null || season == null || league == null) {
+//            throw new Exception("some parameters are null");
+//        }
+//        if (teamDa.get(teamId) != null) {
+//            throw new Exception("team is already exist");
+//        }
+//        Team team = new Team(teamId, teamName, season, league);
+//        teamDa.save(teamId, teamName, team.getExpense(), new ArrayList<>(), league, season);
+//    }
 
     public void addGame() {
 
+    }
+
+    public static void main(String[] args) throws Exception {
+        UserController uc = UserController.getInstance();
+        RFADao rfaDao = RFADao.getInstance();
+        rfaDao.save("Roey", "RB@gmail.com", "Roey", "Roey");
+        Referee referee;
+        try {
+            uc.logIn("Roey", "Roey");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        System.out.println(uc.getLoggedInUser());
+        try {
+            uc.registerReferee("Liron", "Liron@gmail.com", "LironMor", "1234", "main", "expert", "1");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Stadium samiOffer = new Stadium("Haifa", "Sami Offer");
+        uc.stadiumDa.save(samiOffer.getName(), samiOffer);
+        Stadium blumfield = new Stadium("Tel-Aviv", "Blumfield");
+        uc.stadiumDa.save(blumfield.getName(), blumfield);
+        Team team = new Team("maccabi haifa" , samiOffer);
+        Team team1 = new Team("Hapoel Tel Aviv", blumfield);
+        uc.teamDa.save(team.getTeamName(), team);
+        uc.teamDa.save(team1.getTeamName(), team1);
+        Game game = new Game("2", team.getTeamName(), team1.getTeamName(), team.getStadium());
+        uc.gameDa.save(game.getGameID(), game);
+//        referee = new Referee("Liron", "Liron@gmail.com", "Liron", "1234", "main", "expert", new ArrayList<>());
+//        uc.refereeDa.save("1", referee);
+        Document document = (Document) uc.gameDa.get(game.getGameID()).get("game");
+        String away = (String) document.get("awayTeamName");
+        String home = (String) document.get("homeTeamName");
+        String id = (String) document.get("gameID");
+        String stadiumName = (String) ((Document)document.get("stadium")).get("name");
+        String stadiumLoc = (String) ((Document)document.get("stadium")).get("location");
+        Game g = new Game(id, home ,away, new Stadium(stadiumLoc, stadiumName));
+        System.out.println(g.getHomeTeamName());
     }
 }

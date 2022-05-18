@@ -5,8 +5,9 @@ public class Stadium implements IAssets{
     private String location;
     private String name;
 
-    public Stadium(String location) {
+    public Stadium(String location, String name) {
         this.location = location;
+        this.name = name;
     }
 
     public String getLocation() {

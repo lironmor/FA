@@ -1,36 +1,59 @@
 package Domain;
+import com.google.common.primitives.UnsignedInteger;
+
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Season {
-    private String startDate;
+    private Integer startYear;
+    private Integer endYear;
+    private ArrayList<String> teamNames;
+    private String leagueName;
+    private String id;
 
-    private String endDate;
-
-    private ArrayList<League> leagues;
-
-    public Season(String startDate, String endDate) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.leagues = new ArrayList<>();
+    public Season(String leagueName, Integer startYear, Integer endYear) throws Exception {
+        this.leagueName = leagueName;
+        if(endYear - startYear != 1 || startYear < new Date().getYear()){
+            throw new Exception("not a valid season");
+        }
+        this.id = leagueName + " " + startYear + "/"+ endYear;
+        this.teamNames = new ArrayList<>();
     }
 
-    public String getStartDate() {
-        return startDate;
+    public ArrayList<String> getTeamNames() {
+        return teamNames;
     }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
+    public void addTeamName(String teamName) throws Exception {
+        if(teamName == null) {
+            throw new Exception("team is null");
+        } else {
+            for (String name: teamNames ) {
+                if(name.equals(teamName)) {
+                    throw new Exception("team is already exist in the season");
+                }
+            }
+        }
+        teamNames.add(teamName);
     }
 
-    public String getEndDate() {
-        return endDate;
+    public String getLeagueName() {
+        return leagueName;
     }
 
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
+    public Integer getStartYear() {
+        return startYear;
     }
 
-    public ArrayList<League> getLeagues() {
-        return leagues;
+    public Integer getEndYear() {
+        return endYear;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setLeagueName(String leagueName) {
+        this.leagueName = leagueName;
     }
 }

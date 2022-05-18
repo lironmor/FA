@@ -17,8 +17,8 @@ public class StadiumDao implements Dao {
     }
 
     @Override
-    public Document get(String stadiumId) {
-        Document stadiumObj = new Document("stadiumId", stadiumId);
+    public Document get(String stadiumName) {
+        Document stadiumObj = new Document("_id", stadiumName);
         MongoCursor<Document> cursor = stadiumCollection.find(stadiumObj).iterator();
         while (cursor.hasNext()) {
             return cursor.next();
@@ -40,5 +40,10 @@ public class StadiumDao implements Dao {
     public void save(String stadiumID, String stadiumName, String location) {
         Document stadiumObj = new Document("stadiumId", stadiumID).append("stadiumName", stadiumName).append("location", location);
         stadiumCollection.insertOne(stadiumObj);
+    }
+
+    public void save(String stadiumName, Object stadium) {
+        Document stadiumDoc = new Document("_id", stadiumName).append("stadium", stadium);
+        stadiumCollection.insertOne(stadiumDoc);
     }
 }

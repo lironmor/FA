@@ -22,18 +22,6 @@ public class Referee extends User{
         }
     }
 
-//    public ArrayList<Game> getUpComingGames(){
-//        return comingUp;
-//    }
-
-//    public void makeGameReport(Game g){
-//        GameReport rep = new GameReport();
-//        g.addReport(rep);
-//    }
-//    public void addEventToReport(Game g, Date date, int min, String descript,String type ) throws Exception {
-//        GameEvent event = new GameEvent(date,min,descript,type);
-//        g.getGameReport().addEventToReport(event);
-//    }
 
     public void roleChoose(String refRole){
         if(refRole.equals("main")){

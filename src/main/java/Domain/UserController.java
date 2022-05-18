@@ -44,13 +44,9 @@ public class UserController {
     public User getLoggedInUser() {
         return loggedInUser;
     }
-    //0- all good
-    //1- not exist
-    //2-already logged in
+
 
     public boolean logIn(String userName, String password) throws Exception {
-        // SHTUYOT SHEL LIRON... if()...== ()
-        //if(setLoggedIn(User u) == true --> HACOL TOV , Else --> "You are alredy logged in as" + loggedInUser.getUserName();
         if (userName == null || password == null) {
             throw new Exception("Some parameters are missing");
         }

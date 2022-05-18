@@ -46,6 +46,10 @@ public class UserController {
     }
 
 
+    public void logOut() {
+        loggedInUser = null;
+    }
+
     public boolean logIn(String userName, String password) throws Exception {
         if (userName == null || password == null) {
             throw new Exception("Some parameters are missing");
@@ -148,13 +152,16 @@ public class UserController {
 //    }
 
     public void addGame(Game game) throws Exception {
+        if(game == null) {
+            throw new Exception("Game is not valid");
+        }
         this.gameDa.save(game.getGameID(), game);
     }
 
     public Game getGame(String gameId) throws Exception {
         Document gameDoc = (Document) this.gameDa.get(gameId).get("game");
         if(gameDoc == null) {
-            throw new Exception("game not found");
+            throw new Exception("Game not found");
         }
         Document away = (Document) gameDoc.get("awayTeam");
         Team awayT = getTeamFromDoc(away);
@@ -172,12 +179,15 @@ public class UserController {
     }
 
     public void addTeam(Team team) throws Exception {
+        if(team == null) {
+            throw new Exception("Team is not valid");
+        }
         this.teamDa.save(team.getTeamName(), team);
     }
 
     public Team getTeamFromDoc(Document teamDoc) throws Exception {
         if(teamDoc == null) {
-            throw new Exception("team not found");
+            throw new Exception("Team not found");
         }
         String teamN = (String) teamDoc.get("teamName");
         int teamExpense = (int) teamDoc.get("expense");
@@ -188,6 +198,9 @@ public class UserController {
     }
 
     public void addStadium(Stadium stadium) throws Exception {
+        if(stadium == null) {
+            throw new Exception("Stadium is not valid");
+        }
         this.stadiumDa.save(stadium.getName(), stadium);
     }
 
@@ -197,11 +210,17 @@ public class UserController {
         return new Stadium(stadLoc, stadName);
     }
 
-    public void addLeague(League league){
+    public void addLeague(League league) throws Exception{
+        if(league == null) {
+            throw new Exception("League is not valid");
+        }
         this.leaguesDa.save(league.getName(), league);
     }
 
-    public void addSeason(Season season){
+    public void addSeason(Season season) throws Exception{
+        if(season == null) {
+            throw new Exception("Season is not valid");
+        }
         this.seasonsDa.save(season.getId(), season);
     }
 

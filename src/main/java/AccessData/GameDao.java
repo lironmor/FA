@@ -38,12 +38,15 @@ public class GameDao implements Dao {
     }
 
 
-    public void save(String gameId, Object game) {
+    public void save(String gameId, Object game) throws Exception{
+        if(gameId == null || game == null) {
+            throw new Exception("Document parameters are null");
+        }
         Document gameDoc = new Document("_id", gameId).append("game", game);
         gameCollection.insertOne(gameDoc);
     }
 
-    public void update(String gameId, Object game) {
+    public void update(String gameId, Object game) throws Exception{
         Document gameDoc = new Document("_id", gameId);
         gameCollection.findOneAndDelete(gameDoc);
         save(gameId, game);

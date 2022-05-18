@@ -60,7 +60,10 @@ public class RefereeDao implements Dao {
 //        usersCollection.insertOne(userObj);
 //    }
 
-    public void save(Object referee, String userName, String password) {
+    public void save(Object referee, String userName, String password) throws Exception{
+        if(referee == null || userName == null || password == null) {
+            throw new Exception("Document parameters are null");
+        }
         Document refObj = new Document("_id", userName).append("ref", referee);
         refereesCollection.insertOne(refObj);
         Document userObj = new Document("userName", userName).append("password", password).append("type", "referee");

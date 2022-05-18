@@ -36,7 +36,10 @@ public class StadiumDao implements Dao {
         return stadiums;
     }
 
-    public void save(String stadiumName, Object stadium) {
+    public void save(String stadiumName, Object stadium) throws Exception{
+        if(stadiumName == null || stadium == null) {
+            throw new Exception("Document parameters are null");
+        }
         Document stadiumDoc = new Document("_id", stadiumName).append("stadium", stadium);
         stadiumCollection.insertOne(stadiumDoc);
     }

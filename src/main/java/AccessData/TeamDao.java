@@ -41,7 +41,10 @@ public class TeamDao implements Dao {
         return teams;
     }
 
-    public void save(String teamName, Object team) {
+    public void save(String teamName, Object team) throws Exception{
+        if(teamName == null || team == null) {
+            throw new Exception("Document parameters are null");
+        }
         Document teamDoc = new Document("_id", teamName).append("team", team);
         teamCollection.insertOne(teamDoc);
     }

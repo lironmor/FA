@@ -10,7 +10,7 @@ public class Team {
 
     public Team(String teamName, Stadium stadium) throws Exception {
         if(teamName == null || stadium == null) {
-            throw new Exception("parameters are null");
+            throw new Exception("Not a valid team");
         }
         this.teamName = teamName;
         this.expense = 0;
@@ -40,11 +40,11 @@ public class Team {
 
     public void addSeasonId(String seasonId) throws Exception {
         if(seasonId == null) {
-            throw new Exception("season is null");
+            throw new Exception("Not a valid season");
         } else {
             for (String sId : seasonIds) {
                 if(sId.equals(seasonId)){
-                    throw new Exception("team already belong to this season");
+                    throw new Exception("Season alredy exist");
                 }
             }
         }
@@ -53,5 +53,9 @@ public class Team {
 
     public Stadium getStadium() {
         return stadium;
+    }
+
+    public ArrayList<String> getSeasonIds() {
+        return seasonIds;
     }
 }

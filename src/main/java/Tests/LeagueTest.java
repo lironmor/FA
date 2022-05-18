@@ -6,14 +6,20 @@ import org.junit.jupiter.api.Test;
 
 public class LeagueTest {
     @Test
-    public void leagueConstructor(){
-        try{
-            League league = new League(1);
-            Assertions.assertEquals(1, league.getId());
-        }
-        catch (Exception e){
-            //TODO:EXPECTED MESSAGE
-            Assertions.assertEquals("", e.getMessage());
+    public void leagueConstructor_Valid() {
+        try {
+            League league = new League("Seria A");
+            Assertions.assertEquals("Seria A", league.getName());
+        } catch (Exception e){};
+    }
+
+    @Test
+    public void leagueConstructor_NotValidName(){
+        try {
+            League league = new League(null);
+        }catch (Exception e){
+            Assertions.assertEquals("Not a valid name",e.getMessage());
         }
     }
+
 }

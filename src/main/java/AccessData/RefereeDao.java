@@ -24,8 +24,8 @@ public class RefereeDao implements Dao {
     private static RefereeDao instance = new RefereeDao();
 
     @Override
-    public Document get(String refereeId) {
-        Document refObj = new Document("_id", refereeId);
+    public Document get(String userName) {
+        Document refObj = new Document("_id", userName);
         MongoCursor<Document> cursor = refereesCollection.find(refObj).iterator();
         while (cursor.hasNext()) {
             return cursor.next();
@@ -53,15 +53,15 @@ public class RefereeDao implements Dao {
         return referees;
     }
 
-    public void save(String name, String email, String userName, String password, String degree, String role, ArrayList<String> comingUpIds) {
-        Document refObj = new Document("name", name).append("email", email).append("userName", userName).append("password", password).append("role", role).append("degree", degree).append("comingUp", comingUpIds);
-        refereesCollection.insertOne(refObj);
-        Document userObj = new Document("userName", userName).append("password", password).append("type", "referee");
-        usersCollection.insertOne(userObj);
-    }
+//    public void save(String name, String email, String userName, String password, String degree, String role, ArrayList<String> comingUpIds) {
+//        Document refObj = new Document("name", name).append("email", email).append("userName", userName).append("password", password).append("role", role).append("degree", degree).append("comingUp", comingUpIds);
+//        refereesCollection.insertOne(refObj);
+//        Document userObj = new Document("userName", userName).append("password", password).append("type", "referee");
+//        usersCollection.insertOne(userObj);
+//    }
 
-    public void save(String refereeId, Object referee, String userName, String password) {
-        Document refObj = new Document("_id", refereeId).append("ref", referee);
+    public void save(Object referee, String userName, String password) {
+        Document refObj = new Document("_id", userName).append("ref", referee);
         refereesCollection.insertOne(refObj);
         Document userObj = new Document("userName", userName).append("password", password).append("type", "referee");
         usersCollection.insertOne(userObj);

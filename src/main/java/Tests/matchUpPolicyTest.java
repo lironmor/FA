@@ -1,94 +1,115 @@
-//package Tests;
-//
-//import Domain.Game;
-//import Domain.Stadium;
-//import Domain.Team;
-//import Domain.matchUpPolicy;
-//import org.junit.jupiter.api.Assertions;
-//import org.junit.jupiter.api.Test;
-//import java.util.Date;
-//
-//public class matchUpPolicyTest {
-//
+package Tests;
+
+import Domain.Game;
+import Domain.*;
+import Domain.matchUpPolicy;
+import org.junit.jupiter.api.*;
+
+import java.util.Date;
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class matchUpPolicyTest {
+    Stadium std1;
+    Stadium std2;
+    Team teamHome;
+    Team teamAway;
+    Game validG;
+    Game notValidG;
+    matchUpPolicy policy;
+    @BeforeEach
+    public  void stubsInit() throws Exception {
+        // Exception wont be thrown here - stubs created properly.
+        std1 = new Stadium("Tel aviv", "Blumfield");
+        std2 = new Stadium("Haifa", "Sami Ofer");
+        teamHome = new Team("Hapoel", std1);
+        teamAway = new Team("Maccabi", std2);
+        validG = new Game("3",teamHome,teamAway);
+        validG.setStadium(std1);
+        notValidG = new Game("2",teamHome,teamAway);
+        notValidG.setStadium(std2);
+        policy = new matchUpPolicy();
+    }
+
+    @Test
+    public void homeTeamStadium_valid(){
+        try {
+            Assertions.assertTrue( policy.homeTeamStadium(validG));
+        }catch (Exception e){};
+    }
+
+    @Test
+    public void homeTeamStadium_notValid() {
+        System.out.println(notValidG+ "2");
+        try{
+            boolean result = policy.homeTeamStadium(notValidG);
+            Assertions.assertFalse(result);
+        }catch(Exception e){};
+    }
+
+    @Test
+    public void homeTeamStadium_nullGame(){
+        System.out.println(notValidG+ "3");
+        try{
+            boolean result = policy.homeTeamStadium(null);
+        }catch(Exception e) {
+            Assertions.assertEquals("Not a valid game", e.getMessage());
+        }
+    }
+
 //    @Test
-//    public void cantPlayAgainstItself_sameTeam() throws Exception {
-//        Team team = new Team("1", "Macabi TLV", "2021-2022", "Israeli Premier League");
-//        Stadium stadium = new Stadium("TLV");
-//        Game game = new Game("1", new Date(), team, team, stadium);
-//        matchUpPolicy matchUp = new matchUpPolicy();
-//        Assertions.assertEquals(false, matchUp.cantPlayAgainstItself(game));
+//    public void homeTeamStadium_nullStd(){
+//        System.out.println(notValidG+ "4");
+//        try{
+//            notValidG.setStadium(null);
+//            boolean result = policy.homeTeamStadium(notValidG);
+//        }catch (Exception e){
+//            Assertions.assertEquals("Not a valid game parameters",e.getMessage());
+//        }
 //    }
-//
-//    @Test
-//    public void cantPlayAgainstItself_diffTeam() {
-//        Team team1 = new Team("1", "Macabi TLV", "2021-2022", "Israeli Premier League");
-//        Team team2 = new Team("2", "Macabi Haifa", "2021-2022", "Israeli Premier League");
-//        Stadium stadium = new Stadium("TLV");
-//        Game game = new Game("1", new Date(), team1, team2, stadium);
-//        matchUpPolicy matchUp = new matchUpPolicy();
-//        Assertions.assertEquals(true, matchUp.cantPlayAgainstItself(game));
-//    }
-//
-//    @Test
-//    public void cantPlayAgainstItself_GameNull() {
-//        Team team1 = new Team("1", "Macabi TLV", "2021-2022", "Israeli Premier League");
-//        Team team2 = new Team("2", "Macabi Haifa", "2021-2022", "Israeli Premier League");
-//        Stadium stadium = new Stadium("TLV");
-//        Game game = null;
-//        matchUpPolicy matchUp = new matchUpPolicy();
-//        Assertions.assertEquals(false, matchUp.cantPlayAgainstItself(game));
-//    }
-//
-//    @Test
-//    public void sameSeasonSameLeague_same(){
-//        Team team1 = new Team("1", "Macabi TLV", "2021-2022", "Israeli Premier League");
-//        Team team2 = new Team("2", "Macabi Haifa", "2021-2022", "Israeli Premier League");
-//        Stadium stadium = new Stadium("TLV");
-//        Game game = new Game("1", new Date(), team1, team2, stadium);
-//        matchUpPolicy matchUp = new matchUpPolicy();
-//        Assertions.assertEquals(true, matchUp.sameSeasonSameLeague(game));
-//    }
-//
-//    @Test
-//    public void sameSeasonSameLeague_diffSeasonSameLeague(){
-//        Team team1 = new Team("1", "Macabi TLV", "2020-2021", "Israeli Premier League");
-//        Team team2 = new Team("2", "Macabi Haifa", "2021-2022", "Israeli Premier League");
-//        Stadium stadium = new Stadium("TLV");
-//        Game game = new Game("1", new Date(), team1, team2, stadium);
-//        matchUpPolicy matchUp = new matchUpPolicy();
-//        Assertions.assertEquals(false, matchUp.sameSeasonSameLeague(game));
-//    }
-//    @Test
-//    public void sameSeasonSameLeague_GameNull() {
-//        Team team1 = new Team("1", "Macabi TLV", "2020-2021", "Israeli Premier League");
-//        Team team2 = new Team("2", "Macabi Haifa", "2021-2022", "Israeli Premier League");
-//        Stadium stadium = new Stadium("TLV");
-//        Game game = null;
-//        matchUpPolicy matchUp = new matchUpPolicy();
-//        Assertions.assertEquals(false, matchUp.sameSeasonSameLeague(game));
-//    }
-//
-//
-//
-//    @Test
-//    public void sameSeasonSameLeague_diffSeasonDiffLeague(){
-//        Team team1 = new Team("1", "Macabi TLV", "2020-2021", "Liga Leumit");
-//        Team team2 = new Team("2", "Macabi Haifa", "2021-2022", "Israeli Premier League");
-//        Stadium stadium = new Stadium("TLV");
-//        Game game = new Game("1", new Date(), team1, team2, stadium);
-//        matchUpPolicy matchUp = new matchUpPolicy();
-//        Assertions.assertEquals(false, matchUp.sameSeasonSameLeague(game));
-//    }
-//
-//    @Test
-//    public void sameSeasonSameLeague_sameSeasonDiffLeague() {
-//        Team team1 = new Team("1", "Macabi TLV", "2021-2022", "Liga Leumit");
-//        Team team2 = new Team("2", "Macabi Haifa", "2021-2022", "Israeli Premier League");
-//        Stadium stadium = new Stadium("TLV");
-//        Game game = new Game("1", new Date(), team1, team2, stadium);
-//        matchUpPolicy matchUp = new matchUpPolicy();
-//        Assertions.assertEquals(false, matchUp.sameSeasonSameLeague(game));
-//    }
-//
-//
-//}
+
+    @Test
+    public void validGameTime_EarlyHour(){
+        System.out.println(notValidG);
+        notValidG.setTimeAndDate(new Date(120,10,18,14,30));
+
+        try{
+            boolean result = policy.validGameTime(notValidG);
+            Assertions.assertFalse(result);
+        }catch (Exception e){}
+
+    }
+
+    @Test
+    public void validGameTime_LateHour(){
+        notValidG.setTimeAndDate(new Date(120,10,18,23,00));
+        try{
+            boolean result = policy.validGameTime(notValidG);
+            Assertions.assertFalse(result);
+        }catch(Exception e){}
+    }
+
+    @Test
+    public void validGameTime_valid(){
+        System.out.println(notValidG+ "5");
+        validG.setTimeAndDate(new Date(120,10,18,20,30));
+
+
+        try {
+            boolean result = policy.validGameTime(validG);
+            Assertions.assertTrue(result);
+        }catch (Exception e){};
+    }
+
+    @Test
+    public void validGameTime_nullGame(){
+        notValidG = null;
+        try{
+            boolean reuslt = policy.validGameTime(notValidG);
+        }catch(Exception e){
+            Assertions.assertEquals("Not a valid game",e.getMessage());
+        }
+    }
+
+
+
+}

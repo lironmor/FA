@@ -41,11 +41,6 @@ public class TeamDao implements Dao {
         return teams;
     }
 
-    public void save(String teamID, String teamName, int expense, ArrayList<String> assets, String league, String season) {
-        Document teamObj = new Document("teamId", teamID).append("teamName", teamName).append("expense", expense).append("assets", assets).append("league", league).append("season", season);
-        teamCollection.insertOne(teamObj);
-    }
-
     public void save(String teamName, Object team) {
         Document teamDoc = new Document("_id", teamName).append("team", team);
         teamCollection.insertOne(teamDoc);

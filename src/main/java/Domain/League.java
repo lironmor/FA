@@ -9,7 +9,7 @@ public class League {
 
     public League(String name) throws Exception {
         if(name == null){
-            throw new Exception("parameters are null");
+            throw new Exception("Not a valid name");
         }
         this.name = name;
         this.seasonIds = new ArrayList<>();

@@ -5,32 +5,11 @@ import org.bson.Document;
 import java.util.ArrayList;
 import java.util.Date;
 
-//public class UserController {
-//    ///data members
-//    private User logedInUser;
-//    private TeamDao
-//
-////    public UserController() {
-////        this.logedInUser = null;
-////    }
-////
-////    public UserController() {ud = UserDaoSQL.getInstance();
-////    }
-////    public void insertUser (User aUser ) {
-////        try {
-////            ud.save(aUser);
-////        } catch (Exception e) {
-////            e.printStackTrace();
-////        }
-////    }
-//}
 
 public class UserController {
     private User loggedInUser;
     public static UserController instance;
-    // SHTUYOT SHEL LIRON
     private TeamDao teamDa;
-//    private AssetsDao assetsDa;
     private RFADao faDa;
     private GameDao gameDa;
     private LeaguesDao leaguesDa;
@@ -38,13 +17,13 @@ public class UserController {
     private SeasonsDao seasonsDa;
     private StadiumDao stadiumDa;
     private UserDao userDa;
+    private matchUpPolicy matchUpP;
 
 
     // SINGLETON !!
     private UserController() {
         this.loggedInUser = null;
         this.teamDa = TeamDao.getInstance();
-//        this.assetsDa = AssetsDao.getInstance();
         this.faDa = RFADao.getInstance();
         this.gameDa = GameDao.getInstance();
         this.leaguesDa = LeaguesDao.getInstance();
@@ -52,6 +31,7 @@ public class UserController {
         this.seasonsDa = SeasonsDao.getInstance();
         this.stadiumDa = StadiumDao.getInstance();
         this.userDa = UserDao.getInstance();
+        this.matchUpP = new matchUpPolicy();
     }
 
     public static UserController getInstance() {
@@ -85,19 +65,19 @@ public class UserController {
         } else {
             switch ((String) user.get("type")) {
                 case "referee":
-                    Document refDoc = refereeDa.get(uName);
+                    Document refDoc = (Document) refereeDa.get(userName).get("ref");
                     if (refDoc == null) {
                         throw new Exception("referee not exist in DB");
                     }
-                    String name = (String) refDoc.get("name");
+                    String name = (String) refDoc.get("fullName");
                     String email = (String) refDoc.get("email");
-                    String role = (String) refDoc.get("role");
+                    String role = (String) refDoc.get("refereeRole");
                     String degree = (String) refDoc.get("degree");
-                    loggedInUser = new Referee(name, email, uName, password, role, degree, new ArrayList<>());
+                    loggedInUser = new Referee(name, email, uName, password, role, degree);
                     return true;
 
                 case "fa":
-                    Document faDoc = faDa.get(uName);
+                    Document faDoc = (Document) faDa.get("rfa").get(userName);
                     if (faDoc == null) {
                         throw new Exception("FA not exist in DB");
                     }
@@ -122,17 +102,22 @@ public class UserController {
         }
     }
 
-    public boolean embedGame(String gameID) {
-        //SHTUYOT SHEL LIRON --> if no such GAME - RETURN 1;
-        //CREATE Team1
-        //CREATE team2
-        //Create STADIUM
-        //GAMEREPORT = NULL
-        //GAME = NEW GAME(..)
-        //SET TIME  REFEREE STADIUM
-        // SENT TO POLICY
-        //
-        //SAVE BACK TO DB
+    public boolean embedGame(String gameId, Date time, String stadiumName) throws Exception {
+        if(!loggedInUser.getClass().getName().equals(RFA.class.getName())) {
+            throw new Exception("User is not allowed to register referee");
+        } else if(gameId == null || time == null || stadiumName == null){
+            throw new Exception("parameters are null");
+        } else {
+            Game game = getGame(gameId);
+            game.setTimeAndDate(time);
+            Document stadiumDoc = (Document) ((Document) stadiumDa.get(stadiumName)).get("stadium");
+            Stadium stadium = getStadiumFromDoc(stadiumDoc);
+            game.setStadium(stadium);
+            if (!matchUpP.homeTeamStadium(game) || !matchUpP.validGameTime(game)) {
+                throw new Exception("the game embedding don't follow the matchup policy");
+            }
+            gameDa.update(game.getGameID(), game);
+        }
         return true;
     }
 
@@ -141,15 +126,14 @@ public class UserController {
             throw new Exception("No user are currently logged in");
         }
         if (loggedInUser.getClass().getName().equals(RFA.class.getName())) {
-            if (fullName == null || email == null || userName == null || password == null || refereeRole == null || degree == null) {
+            if (fullName == null || email == null || userName == null || password == null || refereeRole == null || degree == null || id == null) {
                 throw new Exception("Referee parameters are missing");
             }
             if (userDa.get(userName) != null) {
                 throw new Exception("User name is already exist in system");
             }
-//            refereeDa.save(fullName, email, userName, password, degree, refereeRole, new ArrayList<>());
-            Referee referee = new Referee(fullName, email,userName,password,refereeRole,degree,new ArrayList<>());
-            refereeDa.save(id, referee, userName, password);
+            Referee referee = new Referee(fullName, email,userName,password,refereeRole,degree);
+            refereeDa.save(referee, userName, password);
         } else {
             throw new Exception("User is not allowed to register referee");
         }
@@ -167,14 +151,68 @@ public class UserController {
 //        teamDa.save(teamId, teamName, team.getExpense(), new ArrayList<>(), league, season);
 //    }
 
-    public void addGame() {
+    public void addGame(Game game) throws Exception {
+        this.gameDa.save(game.getGameID(), game);
+    }
 
+    public Game getGame(String gameId) throws Exception {
+        Document gameDoc = (Document) this.gameDa.get(gameId).get("game");
+        if(gameDoc == null) {
+            throw new Exception("game not found");
+        }
+        Document away = (Document) gameDoc.get("awayTeam");
+        Team awayT = getTeamFromDoc(away);
+
+        Document home = (Document) gameDoc.get("homeTeam");
+        Team homeT = getTeamFromDoc(home);
+
+        String id = (String) gameDoc.get("gameID");
+        Stadium stadium = getStadiumFromDoc((Document) gameDoc.get("stadium"));
+        Date time = (Date) gameDoc.get("timeAndDate");
+        Game game = new Game(id, homeT ,awayT);
+        game.setStadium(stadium);
+        game.setTimeAndDate(time);
+        return game;
+    }
+
+    public void addTeam(Team team) throws Exception {
+        this.teamDa.save(team.getTeamName(), team);
+    }
+
+    public Team getTeamFromDoc(Document teamDoc) throws Exception {
+        if(teamDoc == null) {
+            throw new Exception("team not found");
+        }
+        String teamN = (String) teamDoc.get("teamName");
+        int teamExpense = (int) teamDoc.get("expense");
+        Stadium stadium = getStadiumFromDoc((Document) teamDoc.get("stadium"));
+        Team team = new Team(teamN, stadium);
+        team.setExpense(teamExpense);
+        return team;
+    }
+
+    public void addStadium(Stadium stadium) throws Exception {
+        this.stadiumDa.save(stadium.getName(), stadium);
+    }
+
+    public Stadium getStadiumFromDoc(Document stadiumDoc) throws Exception {
+        String stadName = (String) stadiumDoc.get("name");
+        String stadLoc = (String) stadiumDoc.get("location");
+        return new Stadium(stadLoc, stadName);
+    }
+
+    public void addLeague(League league){
+        this.leaguesDa.save(league.getName(), league);
+    }
+
+    public void addSeason(Season season){
+        this.seasonsDa.save(season.getId(), season);
     }
 
     public static void main(String[] args) throws Exception {
         UserController uc = UserController.getInstance();
-        RFADao rfaDao = RFADao.getInstance();
-        rfaDao.save("Roey", "RB@gmail.com", "Roey", "Roey");
+        Referee referee1 = new Referee("Roey", "RB@gmail.com", "Roey", "Roey", "main", "expert");
+        uc.refereeDa.save(referee1, "Roey", "Roey");
         Referee referee;
         try {
             uc.logIn("Roey", "Roey");
@@ -187,35 +225,33 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        League league = new League("SeriaA");
+        Season season = new Season(league.getName(), 2020,2021);
+        league.addSeasonId(season.getId());
+
         Stadium samiOffer = new Stadium("Haifa", "Sami Offer");
-        uc.stadiumDa.save(samiOffer.getName(), samiOffer);
+        uc.addStadium(samiOffer);
+
         Stadium blumfield = new Stadium("Tel-Aviv", "Blumfield");
-        uc.stadiumDa.save(blumfield.getName(), blumfield);
-        Team team = new Team("maccabi haifa" , samiOffer);
+        uc.addStadium(blumfield);
+
+        Team team = new Team("Maccabi Haifa" , samiOffer);
         Team team1 = new Team("Hapoel Tel Aviv", blumfield);
         team.setExpense(1000);
         team1.setExpense(100);
-        uc.teamDa.save(team.getTeamName(), team);
-        uc.teamDa.save(team1.getTeamName(), team1);
-        Game game = new Game("2", team, team1, team.getStadium());
-        uc.gameDa.save(game.getGameID(), game);
-//        referee = new Referee("Liron", "Liron@gmail.com", "Liron", "1234", "main", "expert", new ArrayList<>());
-//        uc.refereeDa.save("1", referee);
-        Document document = (Document) uc.gameDa.get(game.getGameID()).get("game");
-        Document away = (Document) document.get("awayTeam");
-        Document awayTS = (Document) away.get("stadium");
-        Document home = (Document) document.get("homeTeam");
-        Document homeTS = (Document) home.get("stadium");
-        Team homeT = new Team((String) home.get("teamName"), new Stadium((String) homeTS.get("name"), (String) homeTS.get("location")));
-        Team awayT = new Team((String) away.get("teamName"), new Stadium((String) awayTS.get("name"), (String) awayTS.get("location")));
-        int homeEx = (int) home.get("expense");
-        int awayEx = (int) away.get("expense");
-        homeT.setExpense(homeEx);
-        awayT.setExpense(awayEx);
-        String id = (String) document.get("gameID");
-        String stadiumName = (String) ((Document)document.get("stadium")).get("name");
-        String stadiumLoc = (String) ((Document)document.get("stadium")).get("location");
-        Game g = new Game(id, homeT ,awayT, new Stadium(stadiumLoc, stadiumName));
-        System.out.println(g.getHomeTeam().getExpense());
+        uc.addTeam(team);
+        uc.addTeam(team1);
+
+        season.addTeamName(team.getTeamName());
+        season.addTeamName(team1.getTeamName());
+
+        Game game = new Game("2", team, team1);
+        game.setStadium(samiOffer);
+        season.addGame(game);
+
+        uc.addSeason(season);
+        uc.addLeague(league);
+        uc.addGame(game);
+        uc.embedGame(game.getGameID(), new Date(122, 4, 30,20,00), "Sami Offer");
     }
 }

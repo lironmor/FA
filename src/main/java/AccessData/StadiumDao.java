@@ -36,12 +36,6 @@ public class StadiumDao implements Dao {
         return stadiums;
     }
 
-    //    public void save(String teamID, String teamName, int expense, String homeTeamID, String awayTeamID, ArrayList<String> leagues, ArrayList<String> seasons) {
-    public void save(String stadiumID, String stadiumName, String location) {
-        Document stadiumObj = new Document("stadiumId", stadiumID).append("stadiumName", stadiumName).append("location", location);
-        stadiumCollection.insertOne(stadiumObj);
-    }
-
     public void save(String stadiumName, Object stadium) {
         Document stadiumDoc = new Document("_id", stadiumName).append("stadium", stadium);
         stadiumCollection.insertOne(stadiumDoc);

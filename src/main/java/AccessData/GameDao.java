@@ -37,14 +37,15 @@ public class GameDao implements Dao {
         return games;
     }
 
-    //    public void save(String teamID, String teamName, int expense, String homeTeamID, String awayTeamID, ArrayList<String> leagues, ArrayList<String> seasons) {
-    public void save(String gameID, Date time, int expense, String homeTeamID, String awayTeamID, String stadiumName, String reportId) {
-        Document gameObj = new Document("gameId", gameID).append("time", time).append("homeTeam", homeTeamID).append("awayTeam", awayTeamID).append("stadium", stadiumName).append("gameReport", reportId);
-        gameCollection.insertOne(gameObj);
-    }
 
     public void save(String gameId, Object game) {
         Document gameDoc = new Document("_id", gameId).append("game", game);
         gameCollection.insertOne(gameDoc);
+    }
+
+    public void update(String gameId, Object game) {
+        Document gameDoc = new Document("_id", gameId);
+        gameCollection.findOneAndDelete(gameDoc);
+        save(gameId, game);
     }
 }

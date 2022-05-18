@@ -36,11 +36,6 @@ public class SeasonsDao implements Dao {
         return seasons;
     }
 
-    public void save(String seasonName, ArrayList<String> leagues) {
-        Document seasObj = new Document("seasonName", seasonName).append("leagues", leagues);
-        teamCollection.insertOne(seasObj);
-    }
-
     public void save(String seasonId, Object season) {
         Document seasonDoc = new Document("_id", seasonId).append("season", season);
         teamCollection.insertOne(seasonDoc);

@@ -9,9 +9,8 @@ enum Degree {expert, veteran,novice}
 public class Referee extends User{
     private Role refereeRole;
     private Degree degree;
-    private ArrayList<String> comingUpGameIds;
 
-    public Referee(String fullName, String email, String userName, String password, String refereeRole, String degree, ArrayList<String> comingUpGameIds) throws Exception {
+    public Referee(String fullName, String email, String userName, String password, String refereeRole, String degree) throws Exception {
         super(fullName, email, userName, password);
         roleChoose(refereeRole);
         degreeChoose(degree);
@@ -21,7 +20,6 @@ public class Referee extends User{
         if(this.refereeRole == null) {
             throw new Exception("Referee roll must be main/sideline/forth !");
         }
-        this.comingUpGameIds = comingUpGameIds;
     }
 
 //    public ArrayList<Game> getUpComingGames(){
@@ -38,13 +36,13 @@ public class Referee extends User{
 //    }
 
     public void roleChoose(String refRole){
-        if(refRole == "main"){
+        if(refRole.equals("main")){
             refereeRole = Role.main;
         }
-        else if(refRole == "side line"){
+        else if(refRole.equals("side line")){
             refereeRole = Role.sideline;
         }
-        else if(refRole == "forth"){
+        else if(refRole.equals("forth")){
             refereeRole = Role.forth;
         }
         else{
@@ -52,13 +50,13 @@ public class Referee extends User{
         }
     }
     public void degreeChoose(String deg){
-        if(deg == "expert"){
+        if(deg.equals("expert")){
             degree = Degree.expert;
         }
-        else if(deg == "veteran"){
+        else if(deg.equals("veteran")){
             degree = Degree.veteran;
         }
-        else if(deg == "novice"){
+        else if(deg.equals("novice")){
             degree = Degree.novice;
         }
         else{
@@ -74,11 +72,11 @@ public class Referee extends User{
     }
 
     public String getDegree() {
+        if(degree == null){
+            return null;
+        }
         return degree.toString();
     }
 
-    public ArrayList<String> getComingUpGameIds() {
-        return comingUpGameIds;
-    }
 
 }

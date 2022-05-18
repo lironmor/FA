@@ -7,7 +7,7 @@ public class Stadium implements IAssets{
 
     public Stadium(String location, String name) throws Exception {
         if(location == null || name == null){
-            throw new Exception("parameters are null");
+            throw new Exception("Not a valid stadium");
         }
         this.location = location;
         this.name = name;

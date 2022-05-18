@@ -36,7 +36,6 @@ public class UserDao implements Dao {
         return users;
     }
 
-    //    public void save(String teamID, String teamName, int expense, String homeTeamID, String awayTeamID, ArrayList<String> leagues, ArrayList<String> seasons) {
     public void save(String userName, String password, String userType) {
         Document teamObj = new Document("userName", userName).append("password", password).append("type", userType);
         userCollection.insertOne(teamObj);

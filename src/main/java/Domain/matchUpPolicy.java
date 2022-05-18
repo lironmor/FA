@@ -17,7 +17,7 @@ public class matchUpPolicy extends Policy {
         if (team_stadium == null)
             throw new Exception("Home team must have a stadium");
         else {
-            if (team_stadium == game.getStadium())
+            if (team_stadium.getName().equals(game.getStadium().getName()))
                 return true;
             else
                 return false;

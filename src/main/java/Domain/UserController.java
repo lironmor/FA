@@ -104,9 +104,9 @@ public class UserController {
 
     public boolean embedGame(String gameId, Date time, String stadiumName) throws Exception {
         if(!loggedInUser.getClass().getName().equals(RFA.class.getName())) {
-            throw new Exception("User is not allowed to register referee");
+            throw new Exception("User is not allowed to embed games");
         } else if(gameId == null || time == null || stadiumName == null){
-            throw new Exception("parameters are null");
+            throw new Exception("Not valid Game");
         } else {
             Game game = getGame(gameId);
             game.setTimeAndDate(time);
@@ -114,7 +114,7 @@ public class UserController {
             Stadium stadium = getStadiumFromDoc(stadiumDoc);
             game.setStadium(stadium);
             if (!matchUpP.homeTeamStadium(game) || !matchUpP.validGameTime(game)) {
-                throw new Exception("the game embedding don't follow the matchup policy");
+                throw new Exception("Matchup policy error");
             }
             gameDa.update(game.getGameID(), game);
         }
@@ -127,7 +127,7 @@ public class UserController {
         }
         if (loggedInUser.getClass().getName().equals(RFA.class.getName())) {
             if (fullName == null || email == null || userName == null || password == null || refereeRole == null || degree == null || id == null) {
-                throw new Exception("Referee parameters are missing");
+                throw new Exception("Not valid referee");
             }
             if (userDa.get(userName) != null) {
                 throw new Exception("User name is already exist in system");

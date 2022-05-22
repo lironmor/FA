@@ -10,12 +10,12 @@ public class matchUpPolicy extends Policy {
 
     public boolean homeTeamStadium(Game game) throws Exception {
         if (game == null)
-            return false;
+            throw new Exception("Not a valid game");
 
         Stadium team_stadium = game.getHomeTeam().getStadium();
 
         if (team_stadium == null)
-            throw new Exception("Home team must have a stadium");
+            throw new Exception("Not a valid game");
         else {
             if (team_stadium.getName().equals(game.getStadium().getName()))
                 return true;
@@ -24,9 +24,9 @@ public class matchUpPolicy extends Policy {
         }
     }
 
-    public boolean validGameTime(Game game){
+    public boolean validGameTime(Game game) throws Exception {
         if (game == null)
-            return false;
+            throw new Exception("Not a valid game");
 
         int game_hours = game.getTimeAndDate().getHours();
 
@@ -41,17 +41,6 @@ public class matchUpPolicy extends Policy {
     }
 
 
-    public static void main(String[] args) {
-        Date date = new Date();
-        date.setHours(18);
-        date.setMinutes(00);
-
-        Date date2 = new Date();
-        date2.setHours(22);
-        date2.setMinutes(00);
-
-        System.out.println(date.after(date2));
-    }
 
 
 

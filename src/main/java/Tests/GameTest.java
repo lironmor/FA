@@ -4,7 +4,7 @@ import Domain.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import java.rmi.server.ExportException;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

@@ -2,7 +2,6 @@ package Domain;
 import AccessData.*;
 import org.bson.Document;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -58,17 +57,21 @@ public class UserController {
             throw new Exception("User is already logged in");
         }
         Document user = this.userDa.get(userName);
+        if(user == null){
+            throw new Exception("User name or password are wrong");
+        }
         String uName = (String) user.get("userName");
         String uPass = (String) user.get("password");
-        if (user == null || !uPass.equals(password)) {
+        if (!uPass.equals(password)) {
             throw new Exception("User name or password are wrong");
         } else {
             switch ((String) user.get("type")) {
                 case "referee":
-                    Document refDoc = (Document) refereeDa.get(userName).get("ref");
+                    Document refDoc = refereeDa.get(userName);
                     if (refDoc == null) {
                         throw new Exception("referee not exist in DB");
                     }
+                    refDoc = (Document) refDoc.get("ref");
                     String name = (String) refDoc.get("fullName");
                     String email = (String) refDoc.get("email");
                     String role = (String) refDoc.get("refereeRole");
@@ -76,12 +79,13 @@ public class UserController {
                     loggedInUser = new Referee(name, email, uName, password, role, degree);
                     return true;
 
-                case "fa":
-                    Document faDoc = (Document) faDa.get("rfa").get(userName);
+                case "rfa":
+                    Document faDoc = faDa.get(userName);
                     if (faDoc == null) {
                         throw new Exception("FA not exist in DB");
                     }
-                    name = (String) faDoc.get("name");
+                    faDoc = (Document) faDoc.get("rfa");
+                    name = (String) faDoc.get("fullName");
                     email = (String) faDoc.get("email");
                     loggedInUser = new RFA(name, email, uName, password);
                     return true;
@@ -93,24 +97,16 @@ public class UserController {
         }
     }
 
-    private boolean setLoggedIn(User u) {
-        if (loggedInUser != null) {
-            return false;
-        } else {
-            this.loggedInUser = u;
-            return true;
-        }
-    }
 
     public boolean embedGame(String gameId, Date time, String stadiumName) throws Exception {
         if(!loggedInUser.getClass().getName().equals(RFA.class.getName())) {
             throw new Exception("User is not allowed to embed games");
         } else if(gameId == null || time == null || stadiumName == null){
-            throw new Exception("Not valid Game");
+            throw new Exception("Not valid game");
         } else {
             Game game = getGame(gameId);
             game.setTimeAndDate(time);
-            Document stadiumDoc = (Document) ((Document) stadiumDa.get(stadiumName)).get("stadium");
+            Document stadiumDoc = (Document) (stadiumDa.get(stadiumName)).get("stadium");
             Stadium stadium = getStadiumFromDoc(stadiumDoc);
             game.setStadium(stadium);
             if (!matchUpP.homeTeamStadium(game) || !matchUpP.validGameTime(game)) {
@@ -130,39 +126,32 @@ public class UserController {
                 throw new Exception("Not valid referee");
             }
             if (userDa.get(userName) != null) {
-                throw new Exception("User name is already exist in system");
+                throw new Exception("User name is alredy exist in the system");
+            }
+            if (userDa.isEmailExist(email)) {
+                throw new Exception("Email is alredy exist in the system");
             }
             Referee referee = new Referee(fullName, email,userName,password,refereeRole,degree);
-            refereeDa.save(referee, userName, password);
+            refereeDa.save(referee, userName, password, email);
         } else {
             throw new Exception("User is not allowed to register referee");
         }
         return true;
     }
 
-//    public void addTeam(String teamId, String teamName, String season, String league) throws Exception {
-//        if (teamId == null || teamName == null || season == null || league == null) {
-//            throw new Exception("some parameters are null");
-//        }
-//        if (teamDa.get(teamId) != null) {
-//            throw new Exception("team is already exist");
-//        }
-//        Team team = new Team(teamId, teamName, season, league);
-//        teamDa.save(teamId, teamName, team.getExpense(), new ArrayList<>(), league, season);
-//    }
-
     public void addGame(Game game) throws Exception {
         if(game == null) {
-            throw new Exception("Game is not valid");
+            throw new Exception("game is not valid");
         }
         this.gameDa.save(game.getGameID(), game);
     }
 
     public Game getGame(String gameId) throws Exception {
-        Document gameDoc = (Document) this.gameDa.get(gameId).get("game");
+        Document gameDoc = this.gameDa.get(gameId);
         if(gameDoc == null) {
-            throw new Exception("Game not found");
+            throw new Exception("game not found");
         }
+        gameDoc = (Document) gameDoc.get("game");
         Document away = (Document) gameDoc.get("awayTeam");
         Team awayT = getTeamFromDoc(away);
 
@@ -223,50 +212,5 @@ public class UserController {
         }
         this.seasonsDa.save(season.getId(), season);
     }
-//
-//    public static void main(String[] args) throws Exception {
-//        UserController uc = UserController.getInstance();
-//        Referee referee1 = new Referee("Roey", "RB@gmail.com", "Roey", "Roey", "main", "expert");
-//        uc.refereeDa.save(referee1, "Roey", "Roey");
-//        Referee referee;
-//        try {
-//            uc.logIn("Roey", "Roey");
-//        } catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        System.out.println(uc.getLoggedInUser());
-//        try {
-//            uc.registerReferee("Liron", "Liron@gmail.com", "LironMor", "1234", "main", "expert", "1");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        League league = new League("SeriaA");
-//        Season season = new Season(league.getName(), 2021,2022);
-//        league.addSeasonId(season.getId());
-//
-//        Stadium samiOffer = new Stadium("Haifa", "Sami Offer");
-//        uc.addStadium(samiOffer);
-//
-//        Stadium blumfield = new Stadium("Tel-Aviv", "Blumfield");
-//        uc.addStadium(blumfield);
-//
-//        Team team = new Team("Maccabi Haifa" , samiOffer);
-//        Team team1 = new Team("Hapoel Tel Aviv", blumfield);
-//        team.setExpense(1000);
-//        team1.setExpense(100);
-//        uc.addTeam(team);
-//        uc.addTeam(team1);
-//
-//        season.addTeamName(team.getTeamName());
-//        season.addTeamName(team1.getTeamName());
-//
-//        Game game = new Game("2", team, team1);
-//        game.setStadium(samiOffer);
-//        season.addGame(game);
-//
-//        uc.addSeason(season);
-//        uc.addLeague(league);
-//        uc.addGame(game);
-//        uc.embedGame(game.getGameID(), new Date(122, 4, 30,20,00), "Sami Offer");
-//    }
+
 }

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class RefereeDao implements Dao {
     private MongoDB db = MongoDB.getInstance();
-    private MongoCollection usersCollection = db.getCollection("users");
+    private UserDao userDao = UserDao.getInstance();
     private MongoCollection refereesCollection = db.getCollection("referees");
 
 
@@ -33,16 +33,6 @@ public class RefereeDao implements Dao {
         return null;
     }
 
-
-//    public Document gett(int id) {
-//        Document refObj = new Document("_id", id);
-//        MongoCursor<Document> cursor = refereesCollection.find(refObj).iterator();
-//        while (cursor.hasNext()) {
-//            return (Document) cursor.next().get("ref");
-//        }
-//        return null;
-//    }
-
     @Override
     public ArrayList<Document> getAll() {
         ArrayList<Document> referees = new ArrayList<Document>();
@@ -53,21 +43,13 @@ public class RefereeDao implements Dao {
         return referees;
     }
 
-//    public void save(String name, String email, String userName, String password, String degree, String role, ArrayList<String> comingUpIds) {
-//        Document refObj = new Document("name", name).append("email", email).append("userName", userName).append("password", password).append("role", role).append("degree", degree).append("comingUp", comingUpIds);
-//        refereesCollection.insertOne(refObj);
-//        Document userObj = new Document("userName", userName).append("password", password).append("type", "referee");
-//        usersCollection.insertOne(userObj);
-//    }
-
-    public void save(Object referee, String userName, String password) throws Exception{
+    public void save(Object referee, String userName, String password, String email) throws Exception{
         if(referee == null || userName == null || password == null) {
             throw new Exception("Document parameters are null");
         }
         Document refObj = new Document("_id", userName).append("ref", referee);
         refereesCollection.insertOne(refObj);
-        Document userObj = new Document("userName", userName).append("password", password).append("type", "referee");
-        usersCollection.insertOne(userObj);
+        userDao.save(userName, password, "referee", email);
     }
 }
 

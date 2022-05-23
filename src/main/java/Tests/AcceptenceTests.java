@@ -4,7 +4,8 @@ import AccessData.RFADao;
 import AccessData.RefereeDao;
 import Domain.*;
 import Service.ServiceController;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,57 +16,59 @@ import org.testng.annotations.BeforeTest;
 import java.util.Date;
 
 public class AcceptenceTests {
-    ServiceController service;
-    Date date;
+    ServiceController service = ServiceController.getInstance();
+    Date date = new Date(2021,10,12,20,00);
 
     @BeforeAll
-    public static void Init() throws Exception {
-        UserController uc = UserController.getInstance();
-        RefereeDao refereeDao = RefereeDao.getInstance();
-        RFADao rfaDao = RFADao.getInstance();
-        Referee ref = new Referee("Roey Bokobza", "aaa@aaa.com", "Roey", "12345", "main", "expert");
-        refereeDao.save(ref, "Roey", "12345");
-        rfaDao.save("Liron Mor", "aaa@aaa.com", "Liron", "12345");
-        League league = new League("Ligat Ha'Al");
-        Season season = new Season(league.getName(), 2021,2022);
-        league.addSeasonId(season.getId());
+    public static void init() {
+        try {
+            UserController uc = UserController.getInstance();
+            RefereeDao refereeDao = RefereeDao.getInstance();
+            RFADao rfaDao = RFADao.getInstance();
+            Referee ref = new Referee("Roey Bokobza", "roey@gmail.com", "Roey", "12345", "main", "expert");
+            refereeDao.save(ref, "Roey", "12345", "roey@gmail.com");
+            RFA rfa = new RFA("Liron Mor", "liron@gmail.com", "Liron", "12345");
+            rfaDao.save(rfa, "Liron", "12345", "liron@gmail.com");
+            League league = new League("Ligat Ha'Al");
+            Season season = new Season(league.getName(), 2021, 2022);
+            league.addSeasonId(season.getId());
 
-        Stadium samiOffer = new Stadium("Haifa", "Sami Offer");
-        uc.addStadium(samiOffer);
+            Stadium samiOffer = new Stadium("Haifa", "Sami Offer");
+            uc.addStadium(samiOffer);
 
-        Stadium blumfield = new Stadium("Tel-Aviv", "Blumfield");
-        uc.addStadium(blumfield);
+            Stadium blumfield = new Stadium("Tel-Aviv", "Blumfield");
+            uc.addStadium(blumfield);
 
-        Team team = new Team("Maccabi Haifa" , samiOffer);
-        Team team1 = new Team("Hapoel Tel Aviv", blumfield);
-        team.setExpense(1000);
-        team1.setExpense(100);
-        uc.addTeam(team);
-        uc.addTeam(team1);
+            Team team = new Team("Maccabi Haifa", samiOffer);
+            Team team1 = new Team("Hapoel Tel Aviv", blumfield);
+            team.setExpense(1000);
+            team1.setExpense(100);
+            uc.addTeam(team);
+            uc.addTeam(team1);
 
-        season.addTeamName(team.getTeamName());
-        season.addTeamName(team1.getTeamName());
+            season.addTeamName(team.getTeamName());
+            season.addTeamName(team1.getTeamName());
 
-        Game game = new Game("2", team, team1);
-        game.setStadium(samiOffer);
-        season.addGame(game);
+            Game game = new Game("1", team, team1);
+            game.setStadium(samiOffer);
+            season.addGame(game);
 
-        uc.addSeason(season);
-        uc.addLeague(league);
-        uc.addGame(game);
+            uc.addSeason(season);
+            uc.addLeague(league);
+            uc.addGame(game);
+        } catch (Exception e) {}
     }
 
-    @BeforeEach
-    public void init() {
-        this.service = ServiceController.getInstance();
-        this.date = new Date(2021,10,12,20,00);
+    @AfterEach
+    public void afterEach() {
+        service.logOut();
     }
 
 //    @AfterEach
 //    public void resetService() {
 //        service = null;
 //    }
-
+//    @AfterEach
 //    public void resetService() {
 //        service.setUc(null);
 //    }
@@ -84,7 +87,6 @@ public class AcceptenceTests {
             Assertions.assertEquals(true,succsses);
         } catch (Exception e) {
         }
-        ;
     }
 
     @Test
@@ -154,7 +156,7 @@ public class AcceptenceTests {
     public void embedGameTest_errorPolicyHomeStadium(){
         try{
             service.logIn("Liron", "12345");
-            boolean succsses =service.embedGame("1",date,"Blumfield");
+            boolean succsses =service.embedGame("1", date,"Blumfield");
 
         }catch (Exception e){
             Assertions.assertEquals("Matchup policy error",e.getMessage());
@@ -192,6 +194,17 @@ public class AcceptenceTests {
     }
 
     @Test
+    public void registerRefereeTest_emailAlredyExist() {
+        try {
+            service.logIn("Liron", "12345");
+            boolean succsses = service.registerReferee("Liron Buhnik", "liron@gmail.com", "Lir", "1234", "main", "novice", "2");
+
+        } catch (Exception e) {
+            Assertions.assertEquals("Email is alredy exist in the system", e.getMessage());
+        }
+    }
+
+    @Test
     public void registerRefereeTest_NotFA(){
         try{
             service.logIn("Roey","12345");
@@ -218,7 +231,7 @@ public class AcceptenceTests {
             boolean succsses = service.registerReferee("Eli hacmon", "Eli@gmail.com", "eli", "1234", "main", "novice", "2");
 
         }catch (Exception e){
-            Assertions.assertEquals("user name is alreedy exist in the system",e.getMessage());
+            Assertions.assertEquals("User name is alredy exist in the system",e.getMessage());
         }
     }
 

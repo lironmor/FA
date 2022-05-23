@@ -36,8 +36,17 @@ public class UserDao implements Dao {
         return users;
     }
 
-    public void save(String userName, String password, String userType) {
-        Document teamObj = new Document("userName", userName).append("password", password).append("type", userType);
+    public void save(String userName, String password, String userType, String email) {
+        Document teamObj = new Document("userName", userName).append("password", password).append("type", userType).append("email", email);
         userCollection.insertOne(teamObj);
+    }
+
+    public boolean isEmailExist(String email) {
+        Document userObj = new Document("email", email);
+        MongoCursor<Document> cursor = userCollection.find(userObj).iterator();
+        while (cursor.hasNext()) {
+            return true;
+        }
+        return false;
     }
 }

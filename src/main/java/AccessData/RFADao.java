@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 public class RFADao implements Dao {
     private MongoDB db = MongoDB.getInstance();
-    private MongoCollection usersCollection = db.getCollection("users");
     private MongoCollection FACollection = db.getCollection("fa");
+    private UserDao userDao = UserDao.getInstance();
 
 
     private RFADao() { }
@@ -22,7 +22,7 @@ public class RFADao implements Dao {
 
     @Override
     public Document get(String userName) {
-        Document faObj = new Document("userName", userName);
+        Document faObj = new Document("_id", userName);
         MongoCursor<Document> cursor = FACollection.find(faObj).iterator();
         while (cursor.hasNext()) {
             return cursor.next();
@@ -41,10 +41,13 @@ public class RFADao implements Dao {
         return fas;
     }
 
-    public void save(String name, String email, String userName, String password) {
-        Document faObj = new Document("name", name).append("email", email).append("userName", userName).append("password", password);
-        FACollection.insertOne(faObj);
-        Document userObj = new Document("userName", userName).append("password", password).append("type", "fa");
-        usersCollection.insertOne(userObj);
+
+    public void save(Object rfa, String userName, String password, String email) throws Exception{
+        if(rfa == null || userName == null || password == null) {
+            throw new Exception("Document parameters are null");
+        }
+        Document rfaObj = new Document("_id", userName).append("rfa", rfa);
+        FACollection.insertOne(rfaObj);
+        userDao.save(userName, password, "rfa", email);
     }
 }

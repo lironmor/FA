@@ -1,7 +1,8 @@
 package Tests;
 
-import Domain.Game;
-import Domain.UserController;
+import AccessData.RFADao;
+import AccessData.RefereeDao;
+import Domain.*;
 import Service.ServiceController;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
@@ -17,17 +18,57 @@ public class AcceptenceTests {
     ServiceController service;
     Date date;
 
+    @BeforeAll
+    public static void Init() throws Exception {
+        UserController uc = UserController.getInstance();
+        RefereeDao refereeDao = RefereeDao.getInstance();
+        RFADao rfaDao = RFADao.getInstance();
+        Referee ref = new Referee("Roey Bokobza", "aaa@aaa.com", "Roey", "12345", "main", "expert");
+        refereeDao.save(ref, "Roey", "12345");
+        rfaDao.save("Liron Mor", "aaa@aaa.com", "Liron", "12345");
+        League league = new League("Ligat Ha'Al");
+        Season season = new Season(league.getName(), 2021,2022);
+        league.addSeasonId(season.getId());
+
+        Stadium samiOffer = new Stadium("Haifa", "Sami Offer");
+        uc.addStadium(samiOffer);
+
+        Stadium blumfield = new Stadium("Tel-Aviv", "Blumfield");
+        uc.addStadium(blumfield);
+
+        Team team = new Team("Maccabi Haifa" , samiOffer);
+        Team team1 = new Team("Hapoel Tel Aviv", blumfield);
+        team.setExpense(1000);
+        team1.setExpense(100);
+        uc.addTeam(team);
+        uc.addTeam(team1);
+
+        season.addTeamName(team.getTeamName());
+        season.addTeamName(team1.getTeamName());
+
+        Game game = new Game("2", team, team1);
+        game.setStadium(samiOffer);
+        season.addGame(game);
+
+        uc.addSeason(season);
+        uc.addLeague(league);
+        uc.addGame(game);
+    }
 
     @BeforeEach
     public void init() {
-        service = ServiceController.getInstance();
-        date = new Date(2021,10,12,20,00);
+        this.service = ServiceController.getInstance();
+        this.date = new Date(2021,10,12,20,00);
     }
 
-    @AfterEach
-    public void resetService() {
-        service.setUc(null);
-    }
+//    @AfterEach
+//    public void resetService() {
+//        service = null;
+//    }
+
+//    public void resetService() {
+//        service.setUc(null);
+//    }
 
     // The user: Liron,12345 is in the system.
     // TODO: insert the user Liron(FA)("Liron","12345") to the system in the INIT() function.

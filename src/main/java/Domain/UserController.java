@@ -223,50 +223,50 @@ public class UserController {
         }
         this.seasonsDa.save(season.getId(), season);
     }
-
-    public static void main(String[] args) throws Exception {
-        UserController uc = UserController.getInstance();
-        Referee referee1 = new Referee("Roey", "RB@gmail.com", "Roey", "Roey", "main", "expert");
-        uc.refereeDa.save(referee1, "Roey", "Roey");
-        Referee referee;
-        try {
-            uc.logIn("Roey", "Roey");
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        System.out.println(uc.getLoggedInUser());
-        try {
-            uc.registerReferee("Liron", "Liron@gmail.com", "LironMor", "1234", "main", "expert", "1");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        League league = new League("SeriaA");
-        Season season = new Season(league.getName(), 2020,2021);
-        league.addSeasonId(season.getId());
-
-        Stadium samiOffer = new Stadium("Haifa", "Sami Offer");
-        uc.addStadium(samiOffer);
-
-        Stadium blumfield = new Stadium("Tel-Aviv", "Blumfield");
-        uc.addStadium(blumfield);
-
-        Team team = new Team("Maccabi Haifa" , samiOffer);
-        Team team1 = new Team("Hapoel Tel Aviv", blumfield);
-        team.setExpense(1000);
-        team1.setExpense(100);
-        uc.addTeam(team);
-        uc.addTeam(team1);
-
-        season.addTeamName(team.getTeamName());
-        season.addTeamName(team1.getTeamName());
-
-        Game game = new Game("2", team, team1);
-        game.setStadium(samiOffer);
-        season.addGame(game);
-
-        uc.addSeason(season);
-        uc.addLeague(league);
-        uc.addGame(game);
-        uc.embedGame(game.getGameID(), new Date(122, 4, 30,20,00), "Sami Offer");
-    }
+//
+//    public static void main(String[] args) throws Exception {
+//        UserController uc = UserController.getInstance();
+//        Referee referee1 = new Referee("Roey", "RB@gmail.com", "Roey", "Roey", "main", "expert");
+//        uc.refereeDa.save(referee1, "Roey", "Roey");
+//        Referee referee;
+//        try {
+//            uc.logIn("Roey", "Roey");
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        System.out.println(uc.getLoggedInUser());
+//        try {
+//            uc.registerReferee("Liron", "Liron@gmail.com", "LironMor", "1234", "main", "expert", "1");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        League league = new League("SeriaA");
+//        Season season = new Season(league.getName(), 2021,2022);
+//        league.addSeasonId(season.getId());
+//
+//        Stadium samiOffer = new Stadium("Haifa", "Sami Offer");
+//        uc.addStadium(samiOffer);
+//
+//        Stadium blumfield = new Stadium("Tel-Aviv", "Blumfield");
+//        uc.addStadium(blumfield);
+//
+//        Team team = new Team("Maccabi Haifa" , samiOffer);
+//        Team team1 = new Team("Hapoel Tel Aviv", blumfield);
+//        team.setExpense(1000);
+//        team1.setExpense(100);
+//        uc.addTeam(team);
+//        uc.addTeam(team1);
+//
+//        season.addTeamName(team.getTeamName());
+//        season.addTeamName(team1.getTeamName());
+//
+//        Game game = new Game("2", team, team1);
+//        game.setStadium(samiOffer);
+//        season.addGame(game);
+//
+//        uc.addSeason(season);
+//        uc.addLeague(league);
+//        uc.addGame(game);
+//        uc.embedGame(game.getGameID(), new Date(122, 4, 30,20,00), "Sami Offer");
+//    }
 }

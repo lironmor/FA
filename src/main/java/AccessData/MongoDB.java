@@ -12,9 +12,8 @@ import org.bson.codecs.pojo.PojoCodecProvider;
 public class MongoDB {
     private static MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb://localhost:27017"));;
     private static CodecRegistry pojoCodecRegistry = org.bson.codecs.configuration.CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), org.bson.codecs.configuration.CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
-    private static MongoDatabase database = mongoClient.getDatabase("FADB").withCodecRegistry(pojoCodecRegistry);; //creates a database inside the client
+    private static MongoDatabase database = mongoClient.getDatabase("FADB").withCodecRegistry(pojoCodecRegistry); //creates a database inside the client
 
-    private static MongoCollection collection; //collection in the database
 
     private MongoDB() { }
 

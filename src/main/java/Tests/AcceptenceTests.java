@@ -227,6 +227,7 @@ public class AcceptenceTests {
         try {
             service.logIn("Liron", "12345");
             service.registerReferee("Liron Buhnik", "liron@gmail.com", "Lir", "1234", "main", "novice", "2");
+            Assertions.assertThrows(Exception.class, () -> {});
         } catch (Exception e) {
             Assertions.assertEquals("Email is alredy exist in the system", e.getMessage());
         }

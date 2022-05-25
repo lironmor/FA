@@ -30,14 +30,16 @@ public class GameTest {
             Assertions.assertEquals("Hapoel", g.getHomeTeam().getTeamName());
             Assertions.assertEquals("Maccabi", g.getAwayTeam().getTeamName());
             Assertions.assertEquals("Tel aviv", g.getStadium().getLocation());
-
-        }catch (Exception e){};
+        }catch (Exception e){
+            e.printStackTrace();
         }
+    }
 
     @Test
     public void constructorTest_NotValidTeam() {
         try {
             Game g = new Game("12", null, teamAway);
+            Assertions.assertThrows(Exception.class, () -> {});
         } catch (Exception e) {
             Assertions.assertEquals("Not a valid game parameters", e.getMessage());
         }

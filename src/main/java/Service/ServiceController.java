@@ -39,9 +39,6 @@ public class ServiceController {
     public UserController getUc() {
         return uc;
     }
-    //ONLY FOR TEST PURPOSE.
-    public void setUc(UserController uc) {
-        this.uc = uc;
-    }
+
 }
 

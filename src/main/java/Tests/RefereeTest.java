@@ -19,7 +19,8 @@ public class RefereeTest {
     @Test
     public void refereeConstructor_ErrorDegree()  {
         try {
-            Referee referee = new Referee("Roey Bokobza", "roey@gmail.com", "roeyboko", "1234", "main", "Not a Degree");
+            new Referee("Roey Bokobza", "roey@gmail.com", "roeyboko", "1234", "main", "Not a Degree");
+            Assertions.assertThrows(Exception.class, () -> {});
         }
         catch(Exception e){
             Assertions.assertEquals("Referee degree must be expert/veteran/novice !",e.getMessage());
@@ -28,7 +29,8 @@ public class RefereeTest {
     @Test
     public void refereeConstructor_ErrorRole()  {
         try {
-            Referee referee = new Referee("Roey Bokobza", "roey@gmail.com", "roeyboko", "1234", "Not a role", "novice");
+            new Referee("Roey Bokobza", "roey@gmail.com", "roeyboko", "1234", "Not a role", "novice");
+            Assertions.assertThrows(Exception.class, () -> {});
         }
         catch(Exception e){
             Assertions.assertEquals("Referee roll must be main/sideline/forth !",e.getMessage());

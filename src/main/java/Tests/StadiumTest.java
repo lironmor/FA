@@ -3,7 +3,6 @@ package Tests;
 import Domain.Stadium;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 
 public class StadiumTest {
 
@@ -13,13 +12,16 @@ public class StadiumTest {
             Stadium stadium = new Stadium("Here","name");
             Assertions.assertEquals("Here", stadium.getLocation());
             Assertions.assertEquals("name", stadium.getName());
-        }catch(Exception e){};
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void stadiumConstructor_notValidLocation(){
         try{
-            Stadium std = new Stadium(null,"name");
+            new Stadium(null,"name");
+            Assertions.assertThrows(Exception.class, () -> {});
         }catch(Exception e){
             Assertions.assertEquals("Not a valid stadium",e.getMessage());
         }
@@ -28,7 +30,8 @@ public class StadiumTest {
     @Test
     public void stadiumConstructor_notValidName(){
         try{
-            Stadium std = new Stadium("here",null);
+            new Stadium("here",null);
+            Assertions.assertThrows(Exception.class, () -> {});
         }catch(Exception e){
             Assertions.assertEquals("Not a valid stadium",e.getMessage());
         }

@@ -4,20 +4,15 @@ import AccessData.RFADao;
 import AccessData.RefereeDao;
 import Domain.*;
 import Service.ServiceController;
-import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import Service.*;
-import org.testng.annotations.BeforeTest;
+import org.junit.jupiter.api.*;
+
 
 import java.util.Date;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AcceptenceTests {
     ServiceController service = ServiceController.getInstance();
-    Date date = new Date(2021,10,12,20,00);
+    Date date = new Date(121,10,12,20,00);
 
     @BeforeAll
     public static void init() {
@@ -64,21 +59,11 @@ public class AcceptenceTests {
         service.logOut();
     }
 
-//    @AfterEach
-//    public void resetService() {
-//        service = null;
-//    }
-//    @AfterEach
-//    public void resetService() {
-//        service.setUc(null);
-//    }
-
-    // The user: Liron,12345 is in the system.
-    // TODO: insert the user Liron(FA)("Liron","12345") to the system in the INIT() function.
-    // TODO: insert a game to system with id 1 --> Maccabi haifa (HOME) VS Hapoel Tel Aviv (Away).
-    // TODO: insert the user Roey(Referee)("Roey","12345") to the ststem in the INIT() function
-    // TODO: insert the Sdadium "Sami offer" to the system.
-    // TODO: insert the stadium "blumfield" to the system.
+    @AfterAll
+    public void afterAll() {
+        RefereeDao refereeDao = RefereeDao.getInstance();
+        refereeDao.deleteOne("eli");
+    }
 
     @Test
     public void loginTest_Valid() {
@@ -86,13 +71,15 @@ public class AcceptenceTests {
             boolean succsses = service.logIn("Liron", "12345");
             Assertions.assertEquals(true,succsses);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Test
     public void loginTest_NotValid() {
         try {
-            boolean succsses = service.logIn("NotExist", "123");
+            service.logIn("NotExist", "123");
+            Assertions.assertThrows(Exception.class, () -> {});
         } catch (Exception e) {
             Assertions.assertEquals("User name or password are wrong", e.getMessage());
         }
@@ -101,7 +88,8 @@ public class AcceptenceTests {
     @Test
     public void loginTest_NotValidPass() {
         try {
-            boolean succsses = service.logIn("Liron", "NotThePass");
+            service.logIn("Liron", "NotThePass");
+            Assertions.assertThrows(Exception.class, () -> {});
         } catch (Exception e) {
             Assertions.assertEquals("User name or password are wrong", e.getMessage());
         }
@@ -118,7 +106,9 @@ public class AcceptenceTests {
             Assertions.assertEquals("Sami Offer", game.getStadium().getName());
             Assertions.assertEquals(date, game.getTimeAndDate());
             Assertions.assertEquals(true,succsses);
-        } catch (Exception e) {};
+        } catch (Exception e) {
+            e.printStackTrace();
+        };
 
 
     }
@@ -127,7 +117,8 @@ public class AcceptenceTests {
     public void embedGameTest_NotValidGame(){
         try{
             service.logIn("Liron", "12345");
-            boolean succsses =service.embedGame("NotExist",date,"Sami Offer");
+            service.embedGame("NotExist", date,"Sami Offer");
+            Assertions.assertThrows(Exception.class, () -> {});
         }catch (Exception e){
             Assertions.assertEquals("game not found",e.getMessage());
         }
@@ -136,7 +127,8 @@ public class AcceptenceTests {
     public void embedGameTest_NullParams(){
         try{
             service.logIn("Liron", "12345");
-            boolean succsses =service.embedGame("1",null,"Sami Offer");
+            service.embedGame("1",null,"Sami Offer");
+            Assertions.assertThrows(Exception.class, () -> {});
         }catch (Exception e){
             Assertions.assertEquals("Not valid game",e.getMessage());
         }
@@ -146,7 +138,8 @@ public class AcceptenceTests {
     public void embedGameTest_NotFA(){
         try{
             service.logIn("Roey","12345");
-            boolean succsses =service.embedGame("1",date,"Sami Offer");
+            service.embedGame("1",date,"Sami Offer");
+            Assertions.assertThrows(Exception.class, () -> {});
         }catch(Exception e){
             Assertions.assertEquals("User is not allowed to embed games",e.getMessage());
         }
@@ -156,8 +149,8 @@ public class AcceptenceTests {
     public void embedGameTest_errorPolicyHomeStadium(){
         try{
             service.logIn("Liron", "12345");
-            boolean succsses =service.embedGame("1", date,"Blumfield");
-
+            service.embedGame("1", date,"Blumfield");
+            Assertions.assertThrows(Exception.class, () -> {});
         }catch (Exception e){
             Assertions.assertEquals("Matchup policy error",e.getMessage());
         }
@@ -167,7 +160,8 @@ public class AcceptenceTests {
     public void embedGameTest_errorPolicyTime(){
         try{
             service.logIn("Liron", "12345");
-            boolean succsses =service.embedGame("1",new Date(2021,10,12,23,00),"Sami Offer");
+            service.embedGame("1",new Date(121,10,12,23,00),"Sami Offer");
+            Assertions.assertThrows(Exception.class, () -> {});
         }catch (Exception e){
             Assertions.assertEquals("Matchup policy error",e.getMessage());
         }
@@ -177,28 +171,62 @@ public class AcceptenceTests {
     public void registerRefereeTest_Valid(){
         try{
             service.logIn("Liron", "12345");
-            boolean succsses = service.registerReferee("Eli hacmon","Eli@gmail.com","eli","1234","main","novice","2");
+            boolean succsses = service.registerReferee("Eli hacmon","Eli@gmail.com","eli","3abcdsdf","main","novice","2");
             Assertions.assertEquals(true,succsses);
         }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
     @Test
     public void registerRefereeTest_notUserLoggedIn() {
         try {
-            boolean succsses = service.registerReferee("Eli hacmon", "Eli@gmail.com", "eli", "1234", "main", "novice", "2");
-
+            service.registerReferee("Eli hacmon", "Eli@gmail.com", "eli", "1234", "main", "novice", "2");
+            Assertions.assertThrows(Exception.class, () -> {});
         } catch (Exception e) {
             Assertions.assertEquals("No user are currently logged in", e.getMessage());
         }
     }
 
     @Test
+    public void registerRefereeTest_notValidPassword1() {
+        try {
+            service.logIn("Liron", "12345");
+            service.registerReferee("Lior hagag", "lior@gmail.com", "lior", "123456", "main", "novice", "2");
+            Assertions.assertThrows(Exception.class, () -> {});
+        } catch (Exception e) {
+            Assertions.assertEquals("the password must contain at least 6 chars and at least 1 number", e.getMessage());
+        }
+    }
+
+    @Test
+    public void registerRefereeTest_notValidPassword2() {
+        try {
+            service.logIn("Liron", "12345");
+            service.registerReferee("meir hagag", "meir@gmail.com", "meir", "password", "main", "novice", "2");
+            Assertions.assertThrows(Exception.class, () -> {});
+        } catch (Exception e) {
+            Assertions.assertEquals("the password must contain at least 6 chars and at least 1 number", e.getMessage());
+        }
+    }
+
+    @Test
+    public void registerRefereeTest_notValidPassword3() {
+        try {
+            service.logIn("Liron", "12345");
+            service.registerReferee("Shlomi hagag", "Shlomi@gmail.com", "Shlomi", "pas12", "main", "novice", "2");
+            Assertions.assertThrows(Exception.class, () -> {});
+        } catch (Exception e) {
+            Assertions.assertEquals("the password must contain at least 6 chars and at least 1 number", e.getMessage());
+        }
+    }
+
+
+    @Test
     public void registerRefereeTest_emailAlredyExist() {
         try {
             service.logIn("Liron", "12345");
-            boolean succsses = service.registerReferee("Liron Buhnik", "liron@gmail.com", "Lir", "1234", "main", "novice", "2");
-
+            service.registerReferee("Liron Buhnik", "liron@gmail.com", "Lir", "1234", "main", "novice", "2");
         } catch (Exception e) {
             Assertions.assertEquals("Email is alredy exist in the system", e.getMessage());
         }
@@ -208,7 +236,8 @@ public class AcceptenceTests {
     public void registerRefereeTest_NotFA(){
         try{
             service.logIn("Roey","12345");
-            boolean succsses = service.registerReferee("Eli hacmon", "Eli@gmail.com", "eli", "1234", "main", "novice", "2");
+            service.registerReferee("Eli hacmon", "Eli@gmail.com", "eli", "1234", "main", "novice", "2");
+            Assertions.assertThrows(Exception.class, () -> {});
         }catch(Exception e){
             Assertions.assertEquals("User is not allowed to register referee",e.getMessage());
         }
@@ -218,7 +247,8 @@ public class AcceptenceTests {
     public void registerRefereeTest_notValidRef(){
         try{
             service.logIn("Liron","12345");
-            boolean succsses = service.registerReferee("Eli hacmon", "Eli@gmail.com", "eli", "1234", null, "novice", "2");
+            service.registerReferee("Eli hacmon", "Eli@gmail.com", "eli", "1234", null, "novice", "2");
+            Assertions.assertThrows(Exception.class, () -> {});
         } catch(Exception e){
             Assertions.assertEquals("Not valid referee", e.getMessage());
         }
@@ -228,8 +258,8 @@ public class AcceptenceTests {
     public void registerRefereeTest_AlredyExist(){
         try{
             service.logIn("Liron","12345");
-            boolean succsses = service.registerReferee("Eli hacmon", "Eli@gmail.com", "eli", "1234", "main", "novice", "2");
-
+            service.registerReferee("Eli hacmon", "Eli@gmail.com", "eli", "1234", "main", "novice", "2");
+            Assertions.assertThrows(Exception.class, () -> {});
         }catch (Exception e){
             Assertions.assertEquals("User name is alredy exist in the system",e.getMessage());
         }

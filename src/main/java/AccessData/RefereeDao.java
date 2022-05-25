@@ -51,6 +51,12 @@ public class RefereeDao implements Dao {
         refereesCollection.insertOne(refObj);
         userDao.save(userName, password, "referee", email);
     }
+
+    public void deleteOne(String userName){
+        Document refObj = new Document("_id", userName);
+        refereesCollection.deleteOne(refObj);
+        userDao.deleteOne(userName);
+    }
 }
 
 

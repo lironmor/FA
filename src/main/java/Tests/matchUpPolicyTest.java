@@ -34,7 +34,9 @@ public class matchUpPolicyTest {
     public void homeTeamStadium_valid(){
         try {
             Assertions.assertTrue( policy.homeTeamStadium(validG));
-        }catch (Exception e){};
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -43,39 +45,32 @@ public class matchUpPolicyTest {
         try{
             boolean result = policy.homeTeamStadium(notValidG);
             Assertions.assertFalse(result);
-        }catch(Exception e){};
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void homeTeamStadium_nullGame(){
         System.out.println(notValidG+ "3");
         try{
-            boolean result = policy.homeTeamStadium(null);
+            policy.homeTeamStadium(null);
+            Assertions.assertThrows(Exception.class, () -> {});
         }catch(Exception e) {
             Assertions.assertEquals("Not a valid game", e.getMessage());
         }
     }
 
-//    @Test
-//    public void homeTeamStadium_nullStd(){
-//        System.out.println(notValidG+ "4");
-//        try{
-//            notValidG.setStadium(null);
-//            boolean result = policy.homeTeamStadium(notValidG);
-//        }catch (Exception e){
-//            Assertions.assertEquals("Not a valid game parameters",e.getMessage());
-//        }
-//    }
-
     @Test
     public void validGameTime_EarlyHour(){
         System.out.println(notValidG);
         notValidG.setTimeAndDate(new Date(120,10,18,14,30));
-
         try{
             boolean result = policy.validGameTime(notValidG);
             Assertions.assertFalse(result);
-        }catch (Exception e){}
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
@@ -85,26 +80,29 @@ public class matchUpPolicyTest {
         try{
             boolean result = policy.validGameTime(notValidG);
             Assertions.assertFalse(result);
-        }catch(Exception e){}
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void validGameTime_valid(){
         System.out.println(notValidG+ "5");
         validG.setTimeAndDate(new Date(120,10,18,20,30));
-
-
         try {
             boolean result = policy.validGameTime(validG);
             Assertions.assertTrue(result);
-        }catch (Exception e){};
+        }catch (Exception e){
+            e.printStackTrace();
+        };
     }
 
     @Test
     public void validGameTime_nullGame(){
         notValidG = null;
         try{
-            boolean reuslt = policy.validGameTime(notValidG);
+            policy.validGameTime(notValidG);
+            Assertions.assertThrows(Exception.class, () -> {});
         }catch(Exception e){
             Assertions.assertEquals("Not a valid game",e.getMessage());
         }

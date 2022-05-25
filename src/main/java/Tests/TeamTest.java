@@ -28,7 +28,9 @@ public class TeamTest {
             Assertions.assertEquals(std.getName(),team.getStadium().getName());
             Assertions.assertEquals(0,team.getExpense());
 
-        }catch(Exception e){};
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -58,7 +60,9 @@ public class TeamTest {
             team.addSeasonId(season.getId());
             Assertions.assertEquals(seasonNames,team.getSeasonIds());
             seasonNames.clear();
-        }catch (Exception e){};
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -73,6 +77,7 @@ public class TeamTest {
             team.addSeasonId(season.getId());
             team.addSeasonId(season2.getId());
             team.addSeasonId(season.getId());
+            Assertions.assertThrows(Exception.class, () -> {});
         }catch(Exception e){
             seasonNames.clear();
             Assertions.assertEquals("Season alredy exist",e.getMessage());
@@ -84,6 +89,7 @@ public class TeamTest {
         try{
             Team team = new Team("Hapoel",std);
             team.addSeasonId(null);
+            Assertions.assertThrows(Exception.class, () -> {});
         }catch(Exception e){
             Assertions.assertEquals("Not a valid season",e.getMessage());
         }

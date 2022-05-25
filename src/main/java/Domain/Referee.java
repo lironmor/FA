@@ -65,6 +65,4 @@ public class Referee extends User{
         }
         return degree.toString();
     }
-
-
 }

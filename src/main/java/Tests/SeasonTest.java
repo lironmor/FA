@@ -28,13 +28,16 @@ public class SeasonTest {
             Assertions.assertEquals(2021,season.getEndYear());
             Assertions.assertEquals("Seria A 2020/2021",season.getId());
         }
-        catch(Exception e){};
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void seasonConstructor_nullLeague(){
         try{
-            Season season = new Season(null,2020,2021);
+            new Season(null,2020,2021);
+            Assertions.assertThrows(Exception.class, () -> {});
         }catch(Exception e){
             Assertions.assertEquals("Not a valid season",e.getMessage());
         }
@@ -58,7 +61,9 @@ public class SeasonTest {
             Season season = new Season("Seria A",2020,2021);
             season.addTeamName(team.getTeamName());
             Assertions.assertEquals(teamNames,season.getTeamNames());
-        } catch(Exception e){};
+        } catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -69,6 +74,7 @@ public class SeasonTest {
             Season season = new Season("Seria A",2020,2021);
             season.addTeamName(team.getTeamName());
             season.addTeamName(team.getTeamName());
+            Assertions.assertThrows(Exception.class, () -> {});
         }catch(Exception e){
             Assertions.assertEquals("Team is already exist in the season",e.getMessage());
         }
@@ -79,6 +85,7 @@ public class SeasonTest {
         try {
             Season season = new Season("Seria A", 2020, 2021);
             season.addTeamName(null);
+            Assertions.assertThrows(Exception.class, () -> {});
         } catch (Exception e) {
             Assertions.assertEquals("Not a valid team", e.getMessage());
         }

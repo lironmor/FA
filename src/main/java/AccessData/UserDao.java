@@ -41,6 +41,11 @@ public class UserDao implements Dao {
         userCollection.insertOne(teamObj);
     }
 
+    public void deleteOne(String userName){
+        Document teamObj = new Document("userName", userName);
+        userCollection.deleteOne(teamObj);
+    }
+
     public boolean isEmailExist(String email) {
         Document userObj = new Document("email", email);
         MongoCursor<Document> cursor = userCollection.find(userObj).iterator();

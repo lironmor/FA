@@ -35,7 +35,9 @@ public class IntegrationTests {
             uc.addGame(game);
             Game g = uc.getGame(game.getGameID());
             Assertions.assertTrue(game.getGameID() == g.getGameID());
-        } catch (Exception e) {};
+        } catch (Exception e) {
+            e.printStackTrace();
+        };
 
     }
 
@@ -44,15 +46,18 @@ public class IntegrationTests {
     public void UserControllerNullGame() {
         try {
             uc.addGame(null);
+            Assertions.assertThrows(Exception.class, () -> {});
         } catch (Exception e) {
             Assertions.assertEquals("game is not valid", e.getMessage());
         }
     }
-//
+
+
     @Test
     public void UserControllerNullLeague() {
         try {
             uc.addLeague(null);
+            Assertions.assertThrows(Exception.class, () -> {});
         } catch (Exception e) {
             Assertions.assertEquals("League is not valid", e.getMessage());
         }
@@ -69,7 +74,8 @@ public class IntegrationTests {
     @Test
     public void UserControllerNullStadium(){
         try{
-            uc.addStadium(null);;
+            uc.addStadium(null);
+            Assertions.assertThrows(Exception.class, () -> {});
         }catch(Exception e){
             Assertions.assertEquals("Stadium is not valid" ,e.getMessage());
         }
@@ -79,6 +85,7 @@ public class IntegrationTests {
     public void UserControllerNullTeam(){
         try{
             uc.addTeam(null);
+            Assertions.assertThrows(Exception.class, () -> {});
         } catch(Exception e){
             Assertions.assertEquals("Team is not valid" , e.getMessage());
         }
@@ -88,6 +95,7 @@ public class IntegrationTests {
     public void UserControllerGetGame_NotValid(){
         try{
             uc.getGame("Not Exist");
+            Assertions.assertThrows(Exception.class, () -> {});
         }catch(Exception e){
             Assertions.assertEquals("game not found", e.getMessage());
         }

@@ -1,7 +1,7 @@
 package Domain;
 import AccessData.*;
 import org.bson.Document;
-
+import java.util.regex.*;
 import java.util.Date;
 
 
@@ -130,6 +130,9 @@ public class UserController {
             }
             if (userDa.isEmailExist(email)) {
                 throw new Exception("Email is alredy exist in the system");
+            }
+            if (!(Pattern.matches("[a-zA-Z]+[0-9]+", password) || Pattern.matches("[0-9]+[a-zA-Z]+", password)) || password.length() < 6){
+                throw new Exception("the password must contain at least 6 chars and at least 1 number");
             }
             Referee referee = new Referee(fullName, email,userName,password,refereeRole,degree);
             refereeDa.save(referee, userName, password, email);
